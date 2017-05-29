@@ -3,12 +3,12 @@
 ### {{ method.method | upper }}
 {{ method.description }}
 
-** Parameters **
+**Parameters**
 {% for parameter in method.queryParameters %}
 * `{{parameter.key}} ({{parameter.type}})` - {{parameter.description | replace("\n", " ") }}
 {% endfor %}
 
-** Responses **
+**Responses**
 {% for response in method.responses %}
 * {{ response.code}} - {{response.description | replace("\n", " ") }}
     {% for property in response.body[0].properties %}

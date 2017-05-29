@@ -1,6 +1,11 @@
 #!/bin/sh
-echo Generating markdown...
-node_modules/.bin/raml2md -t templates/template.nunjucks api.raml > README.md
+[ -d node_modules/raml2html ] || npm install raml2html
+[ -d node_modules/raml2md ] || npm install raml2md
+echo Generating Markdown...
+node_modules/.bin/raml2md -t resource/template.nunjucks api.raml > dist/api.md
 echo Generating HTML...
-node_modules/.bin/raml2html api.raml > api.html
+node_modules/.bin/raml2html api.raml > dist/api.html
+echo Updating README.md...
+cat readme-source.md dist/api.md > README.md
+rm dist/api.md
 echo Done.
