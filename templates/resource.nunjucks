@@ -1,0 +1,23 @@
+{% for method in resource.methods %}
+
+### {{ method.method | upper }}
+{{ method.description }}
+
+** Parameters **
+{% for parameter in method.queryParameters %}
+* `{{parameter.key}} ({{parameter.type}})` - {{parameter.description | replace("\n", " ") }}
+{% endfor %}
+
+** Responses **
+{% for response in method.responses %}
+* {{ response.code}} - {{response.description | replace("\n", " ") }}
+    {% for property in response.body[0].properties %}
+    * `{{property.name}} ({{property.type}})` - {{property.description}}
+    {% endfor %}
+{%- endfor -%}
+
+{%- endfor -%}
+
+{% for resource in resource.resources %}
+{% include "./resource.nunjucks" %}
+{% endfor %}

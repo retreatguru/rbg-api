@@ -1,3 +1,6 @@
 #!/bin/sh
-swagger-markdown -i api.swagger.yaml -o README.md
-sed -i '' $'s/<a name/\\\n<a name/g' README.md
+echo Generating markdown...
+node_modules/.bin/raml2md -t templates/template.nunjucks api.raml > README.md
+echo Generating HTML...
+node_modules/.bin/raml2html api.raml > api.html
+echo Done.
