@@ -2,14 +2,17 @@ swagger: '2.0'
 info:
   title: Retreat Booking Guru API
   version: "1.0.0"
+  description: |
+    This is the API definition for Booking Guru, and online software package
+    designed for retreat centers to manage bookings, retreats, rooms and
+    finances. The API allows access to programs, registrations and transactions
+    that are stored within the system to allow integration with custom software.
+    The same API is also used in our Zapier integration that allows connecting
+    Booking Guru to other applications without the need for custom code.
 
-schemes:
-  - https
-
+schemes: https
 basePath: /api/v1
-
-produces:
-  - application/json
+produces: application/json
   
 paths:
   /registrations:
@@ -19,13 +22,14 @@ paths:
         Registration details including names, emails and programs people have registered to.
       parameters:
         - name: limit
-          in: query
-          description: Limit number of return values.
           type: integer
+          description: |
+            Limit number of return values. The default limit is 20. Pass `limit=0` To get all the registrations without
+            limits, but please use this with caution to not overload our servers.
       responses:
         200:
           description:
-            An array of registrations
+            An array of registrations.
           schema:
             type: array
             items:

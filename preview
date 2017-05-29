@@ -1,0 +1,5 @@
+#!/bin/sh
+./build
+FILE=`mktemp`.html
+github-markdown -s `pwd`/style/github.css README.md > $FILE
+open $FILE
