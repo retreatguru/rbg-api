@@ -1,0 +1,62 @@
+swagger: '2.0'
+info:
+  title: Retreat Booking Guru API
+  version: "1.0.0"
+
+schemes:
+  - https
+
+basePath: /api/v1
+
+produces:
+  - application/json
+  
+paths:
+  /registrations:
+    get:
+      summary: Registrations
+      description: |
+        Registration details including names, emails and programs people have registered to.
+      parameters:
+        - name: limit
+          in: query
+          description: Limit number of return values.
+          type: integer
+      responses:
+        200:
+          description:
+            An array of registrations
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Registration'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+  Registration:
+    type: object
+    properties:
+      id:
+        type: integer
+      first_name:
+        type: string
+      last_name:
+        type: string
+      start_date:
+        type: string
+        format: date
+      end_date:
+        type: string
+        format: date
+      submitted:
+        type: string
+        format: dateTime
+
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
