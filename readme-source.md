@@ -56,7 +56,7 @@ Get all registrations for a particular program:
 $ curl "https://$BGDOMAIN/api/v1registrations?token=$BGTOKEN&program_slug=3-day-escape"
 ```
 
-## Deeper examples
+## Examples
 
 We're working on some deeper examples in PHP, Python and Javascript that we'll push to this repo real soon.
 

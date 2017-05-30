@@ -13,7 +13,7 @@ protocols: HTTPS
   get:
     description: |
       Registration details including names, emails and programs people have registered to. Registrations are always sorted 
-      in reverse chronological order with the newest registations are at the top or the result list.
+      in reverse chronological order with the newest registrations are at the top or the result list.
 
     queryParameters:
 
@@ -77,7 +77,7 @@ protocols: HTTPS
       400:
         description: |
           An error message about an incorrectly submitted request. Includes deatils about the problem
-          and (often) steps to follow to correct it.
+          and (often) steps to correct it.
         body:
           type: Error
 
@@ -94,17 +94,109 @@ types:
       limits, but please use this with caution to not overload our servers.
     required: false
 
+  Id:
+    type: integer
+    description: |
+      Unique internal identifier of the object
+
+  SelfUrl:
+    type: string
+    description: |
+      A URL pointing to the object's API representation
+
   Registration:
     type: object
     properties:
-      id: 
-        type: integer
-        description: registration id
-      first_name: string
-      last_name: string
-      start_date: date-only
-      end_date: date-only
-      submitted: datetime
+      id: Id
+      self_url: SelfUrl
+
+      start_date:
+        type: date-only
+        description: Arrival date
+      end_date:
+        type: string
+        description: Departure date
+      status:
+        type: string
+        description: The registation status [pending, reserved, arrived, cancelled]
+      first_name:
+        type: string
+        description: Guest's first name
+      last_name:
+        type: string
+        description: Guest's last name
+      full_name:
+        type: string
+        description: Guest's full name
+      email:
+        type: string
+        description: Guest's email
+      program:
+        type: string
+        description: The name of the program
+      program_id:
+        type: string
+        description: 
+      program_url:
+        type: string
+        description: 
+      program_category:
+        type: string
+        description: 
+      transactions_url:
+        type: string
+        description: 
+      price_choice:
+        type: string
+        description: 
+      optional_items:
+        type: string
+        description: 
+      submitted:
+        type: string
+        description: 
+      room_id:
+        type: string
+        description: 
+      room:
+        type: string
+        description: 
+      lodging_id:
+        type: string
+        description: 
+      lodging:
+        type: string
+        description: 
+      nights:
+        type: string
+        description: 
+      grand_total:
+        type: string
+        description: 
+      balance_due:
+        type: string
+        description: 
+      subtotal_pre_tax:
+        type: string
+        description: 
+      total_payments_refunds:
+        type: string
+        description: 
+      taxes_sum:
+        type: string
+        description: 
+      taxes_array:
+        type: string
+        description: 
+      person_id:
+        type: string
+        description: 
+      guest_statement_link:
+        type: string
+        description: 
+      guest_edit_link:
+        type: string
+        description: 
 
   Error:
     type: object

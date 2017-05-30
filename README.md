@@ -56,7 +56,7 @@ Get all registrations for a particular program:
 $ curl "https://$BGDOMAIN/api/v1registrations?token=$BGTOKEN&program_slug=3-day-escape"
 ```
 
-## Deeper examples
+## Examples
 
 We're working on some deeper examples in PHP, Python and Javascript that we'll push to this repo real soon.
 
@@ -69,7 +69,7 @@ We're working on some deeper examples in PHP, Python and Javascript that we'll p
 
 ### GET
 Registration details including names, emails and programs people have registered to. Registrations are always sorted 
-in reverse chronological order with the newest registations are at the top or the result list.
+in reverse chronological order with the newest registrations are at the top or the result list.
 
 **Parameters**
 
@@ -97,19 +97,71 @@ in reverse chronological order with the newest registations are at the top or th
 
 * 200 - An array of registration objects.
     
-    * `id (integer)` - registration id
+    * `email (string)` - Guest's email
     
-    * `first_name (string)` - 
+    * `first_name (string)` - Guest's first name
     
-    * `last_name (string)` - 
+    * `self_url (string)` - A URL pointing to the object's API representation
+
     
-    * `start_date (date-only)` - 
+    * `balance_due (string)` - [object Object]
     
-    * `end_date (date-only)` - 
+    * `subtotal_pre_tax (string)` - [object Object]
     
-    * `submitted (datetime)` - 
+    * `guest_edit_link (string)` - [object Object]
     
-* 400 - An error message about an incorrectly submitted request. Includes deatils about the problem and (often) steps to follow to correct it. 
+    * `guest_statement_link (string)` - [object Object]
+    
+    * `program_id (string)` - [object Object]
+    
+    * `lodging (string)` - [object Object]
+    
+    * `optional_items (string)` - [object Object]
+    
+    * `person_id (string)` - [object Object]
+    
+    * `program_url (string)` - [object Object]
+    
+    * `program_category (string)` - [object Object]
+    
+    * `submitted (string)` - [object Object]
+    
+    * `lodging_id (string)` - [object Object]
+    
+    * `nights (string)` - [object Object]
+    
+    * `price_choice (string)` - [object Object]
+    
+    * `end_date (string)` - Departure date
+    
+    * `start_date (date-only)` - Arrival date
+    
+    * `status (string)` - The registation status [pending, reserved, arrived, cancelled]
+    
+    * `id (integer)` - Unique internal identifier of the object
+
+    
+    * `taxes_sum (string)` - [object Object]
+    
+    * `taxes_array (string)` - [object Object]
+    
+    * `grand_total (string)` - [object Object]
+    
+    * `transactions_url (string)` - [object Object]
+    
+    * `last_name (string)` - Guest's last name
+    
+    * `total_payments_refunds (string)` - [object Object]
+    
+    * `room (string)` - [object Object]
+    
+    * `full_name (string)` - Guest's full name
+    
+    * `room_id (string)` - [object Object]
+    
+    * `program (string)` - The name of the program
+    
+* 400 - An error message about an incorrectly submitted request. Includes deatils about the problem and (often) steps to correct it. 
     
     * `message (string)` - 
     

@@ -1,6 +1,10 @@
 #!/bin/sh
+set -e
+[ -d node_modules/raml-cop ] || npm install raml-cop
 [ -d node_modules/raml2html ] || npm install raml2html
 [ -d node_modules/raml2md ] || npm install raml2md
+echo Verifying RAML...
+node_modules/.bin/raml-cop api.raml
 echo Generating Markdown...
 node_modules/.bin/raml2md -t resource/template.nunjucks api.raml > dist/api.md
 echo Generating HTML...
