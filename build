@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 [ -d tools/vendor ] || $(cd tools && composer install)
 php tools/generate-markdown.php api.swagger.yaml > README.md
 echo README.md was regenerated

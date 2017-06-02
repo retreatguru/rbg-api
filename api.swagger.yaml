@@ -63,16 +63,59 @@ info:
 
     Following is the reference for the requests you can currently do against the API.
 
+    All values with the `date` type are in `YYYY-MM-DD` format, all values with the `date-time` type are in the `YYYY-MM-DDTHH:MM:SS` format.
+
 # -------------------------------------------------------------------------------------------------
 
-schemes: [https]
 basePath: /api/v1
+schemes: [https]
 produces: [application/json]
   
 paths:
+  /programs:
+    get:
+      summary: Get program info
+      description: |
+        Retrieves information about programs, their dates and and categories.
+
+      parameters:
+        - name: token
+          in: query
+          type: string
+          description: Security token
+          required: true
+
+        - name: limit
+          in: query
+          type: integer
+          description: |
+            Limit number of return values. The default limit is 20. Pass `limit=0` To get all the programs without
+            limits, but please use this with caution to not overload our servers.
+
+        - name: id
+          in: query
+          type: array
+          items:
+            type: integer
+          description: |
+            Gets programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
+
+      responses:
+        200:
+          description:
+            An array of programs
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Program'
+        400:
+          description: An error
+          schema:
+            $ref: '#/definitions/Error'
+
   /registrations:
     get:
-      summary: Get registrations
+      summary: Get registration info
       description: |
         Retrieves registration details including names, emails and programs people have registered to. Registrations are always sorted 
         in reverse chronological order with the newest registrations are at the top or the result list.
@@ -138,7 +181,6 @@ paths:
             this includes registrations that those that start before `max_stay` and end on or after it,
             and those that start after `max_stay`. This will not include registrations that start after `max_stay`.
 
-
       responses:
         200:
           description:
@@ -153,16 +195,50 @@ paths:
             $ref: '#/definitions/Error'
 
 definitions:
+
+  Program:
+    type: object
+    description: A single program
+    properties:
+      id:
+        type: integer
+        description: internal unique id
+      self_url:
+        type: string
+        format: url
+        description: API URL pointing back to the object
+      name:
+        type: string
+        description: program name
+      start_date:
+        type: string
+        description: program start date
+      end_date:
+        type: string
+        description: program end date
+      registrations_url:
+        type: string
+        description: API URL for program registrations
+      transactions_url:
+        type: string
+        description: API URL for program transactions
+      teachers:
+        type: array
+        items:
+          type: string
+        description: teacher names for the program
+
   Registration:
     type: object
     description: A single registration by a guest to a program.
     properties:
       id:
-        type: string
-        description: internal id of the object
+        type: integer
+        description: internal unique id
       self_url:
         type: string
         description: API URL pointing back to the object
+        format: url
       submitted:
         type: string
         description: time the registration was submitted
@@ -189,21 +265,28 @@ definitions:
         description: guest's full name
       email:
         type: string
+        format: email
         description: guest's email address
       program:
         type: string
         description: name of program the registration is for
       program_url:
         type: string
+        format: url
         description: URL for API representation of program
       program_categories:
-        type: string
+        type: array
+        items:
+          type: string
         description: categories for the program
       transactions_url:
         type: string
-        description: API URL for registration's transactions (payment, refunds, items, discounts, etc...)
+        format: url
+        description: API URL for registration's transactions
       optional_items:
-        type: string
+        type: array
+        items:
+          type: string
         description: optional items (add-ons) selected for the registration
       room:
         type: string
@@ -212,20 +295,25 @@ definitions:
         type: string
         description: name of lodging type selected
       nights:
-        type: string
+        type: integer
         description: total nights of stay
       grand_total:
         type: string
+        format: decimal
         description: total amount owed for the registration
       balance_due:
         type: string
+        format: decimal
         description: current balance
       guest_statement_link:
         type: string
+        format: url
         description: link to the (user-facing) guest statement
       guest_edit_link:
         type: string
+        format: url
         description: link to guest edit page (where a guest can update their details)
+
 
   Error:
     type: object

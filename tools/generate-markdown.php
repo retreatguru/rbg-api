@@ -32,17 +32,33 @@ function load($url)
 function validate($spec) {
     $validator = new Validator;
     $validator->validate($spec, (object)['$ref' => 'file://'.dirname(__FILE__).'/swagger-schema-v2.json']);
+    $result = true;
     if (! $validator->isValid()) {
+        error_log('Errors found in API definition:');
         foreach ($validator->getErrors() as $error) {
             error_log(sprintf('[%s] %s', $error['property'], $error['message']));
+            $result = false;
         }
     }
+    return $result;
 }
 
 function _parse_ref($object) {
     $arr = (array)$object;
     $name = str_replace('#/definitions/', '', $arr['$ref']);
     return "[$name](#definitions-$name)";
+}
+
+function _make_type($field) {
+    if ($field->type == 'array') {
+        return '['.$field->items->type.']';
+    } else {
+        if (isset($field->format)) {
+            return $field->format;
+        } else {
+            return $field->type;
+        }
+    }
 }
 
 /**
@@ -70,7 +86,7 @@ function generate_markdown($spec) {
 
             foreach ($methodInfo->parameters as $parameter) {
                 $required = (isset($parameter->required) ? ' [required]' : '');
-                $type = $parameter->type == 'array' ? '['.$parameter->items->type.']' : $parameter->type;
+                $type = _make_type($parameter);
                 echo "**`$parameter->name: $type$required`**\n";
                 echo '>'.str_replace("\n", ' ', $parameter->description)."\n\n";
             }
@@ -91,7 +107,7 @@ function generate_markdown($spec) {
         }
     }
 
-    echo "## Models\n";
+    echo "\n## Models\n";
 
     // generate model descriptions
     foreach ($spec->definitions as $name => $definition) {
@@ -102,11 +118,12 @@ function generate_markdown($spec) {
 
         echo "#### Properties\n\n";
 
+        echo "| Name | Type | Description |\n";
+        echo "| ---- |----- | ----------- |\n";
+
         foreach ($definition->properties as $propName => $property) {
-            $required = (isset($property->required) ? '[required]' : '');
-            $type = $property->type == 'array' ? '['.$property->items->type.']' : $property->type;
-            echo "**`$propName: $type$required`**\n";
-            echo '>'.str_replace("\n", ' ', $property->description)."\n\n";
+            $type = _make_type($property);
+            echo "| $propName | $type | $property->description |\n";
         }
     }
 }
@@ -123,8 +140,12 @@ function main() {
     }
 
     $spec = load($argv[1]);
-    validate($spec);
-    generate_markdown($spec);
+    $result = validate($spec);
+    if ($result) {
+        generate_markdown($spec);
+    } else {
+        exit(1);
+    }
 }
 
 main();
