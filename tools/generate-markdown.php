@@ -59,24 +59,23 @@ function generate_markdown($spec) {
 
     // generate endpoint descriptions
     foreach ($spec->paths as $path => $methods) {
-        echo "### {$path}\n";
         echo "\n---\n\n";
 
         foreach ($methods as $method => $methodInfo) {
             $method = strtoupper($method);
-            echo "#### *$method*\n\n";
-            echo "##### {$methodInfo->summary}\n\n";
+            echo "### $method {$path}\n";
+            echo "**{$methodInfo->summary}**\n\n";
             echo "$methodInfo->description\n";
-            echo "##### Parameters\n\n";
+            echo "#### Parameters\n\n";
 
             foreach ($methodInfo->parameters as $parameter) {
-                $required = (isset($parameter->required) ? '[required]' : '');
+                $required = (isset($parameter->required) ? ' [required]' : '');
                 $type = $parameter->type == 'array' ? '['.$parameter->items->type.']' : $parameter->type;
                 echo "**`$parameter->name: $type$required`**\n";
-                echo str_replace("\n", ' ', $parameter->description)."\n\n";
+                echo '>'.str_replace("\n", ' ', $parameter->description)."\n\n";
             }
 
-            echo "##### Responses\n\n";
+            echo "#### Responses\n\n";
             echo "| Code | Description | Schema |\n";
             echo "| ---- | ----------- | ------ |\n";
 
@@ -92,21 +91,22 @@ function generate_markdown($spec) {
         }
     }
 
+    echo "## Models\n";
+
     // generate model descriptions
-    echo "\n### Models\n\n";
     foreach ($spec->definitions as $name => $definition) {
-        echo "<a name='definitions-$name'></a>\n";
-        echo "#### $name\n\n";
+        echo "<a name='definitions-$name'></a>\n\n";
+        echo "### $name\n\n";
         echo "$definition->description\n";
         echo "\n";
 
-        echo "##### Properties\n\n";
+        echo "#### Properties\n\n";
 
         foreach ($definition->properties as $propName => $property) {
             $required = (isset($property->required) ? '[required]' : '');
             $type = $property->type == 'array' ? '['.$property->items->type.']' : $property->type;
-            echo "**`$propName: $type$required`**\n\n";
-            echo str_replace("\n", ' ', $property->description)."\n\n";
+            echo "**`$propName: $type$required`**\n";
+            echo '>'.str_replace("\n", ' ', $property->description)."\n\n";
         }
     }
 }

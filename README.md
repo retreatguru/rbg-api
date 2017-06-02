@@ -60,155 +60,130 @@ We're working on some deeper examples in PHP, Python and Javascript that we'll p
 ## API Reference
 
 Following is the reference for the requests you can currently do against the API.
-### /registrations
 
 ---
 
-#### *GET*
-
-##### Get registrations
+### GET /registrations
+**Get registrations**
 
 Retrieves registration details including names, emails and programs people have registered to. Registrations are always sorted 
 in reverse chronological order with the newest registrations are at the top or the result list.
 
-##### Parameters
+#### Parameters
 
-**`token: string[required]`**
-Security token
+**`token: string [required]`**
+>Security token
 
 **`limit: integer`**
-Limit number of return values. The default limit is 20. Pass `limit=0` To get all the registrations without limits, but please use this with caution to not overload our servers. 
+>Limit number of return values. The default limit is 20. Pass `limit=0` To get all the registrations without limits, but please use this with caution to not overload our servers. 
 
 **`id: [integer]`**
-Gets registrations with a specific id or list of ids. To get multiple objects, provide a comma separated list of values. 
+>Gets registrations with a specific id or list of ids. To get multiple objects, provide a comma separated list of values. 
 
 **`program_id: integer`**
-Gets all the registrations for a particular program unique id. You can find the id in the program list  of your Booking Guru admin interface in the ID column. 
+>Gets all the registrations for a particular program unique id. You can find the id in the program list  of your Booking Guru admin interface in the ID column. 
 
 **`min_date: string`**
-Gets registrations that were submitted on or after `min_date`. Can be combined with `max_date` for a range of dates. 
+>Gets registrations that were submitted on or after `min_date`. Can be combined with `max_date` for a range of dates. 
 
 **`max_date: string`**
-Gets registrations that were submitted on or before `max_date`. 
+>Gets registrations that were submitted on or before `max_date`. 
 
 **`min_stay: string`**
-Gets all registrations for which the registration stay dates are on or after `min_stay`. In particular this includes registrations that start on `min_stay`, those that start before `min_stay` and end on or after it, and those that start after `min_stay`. This will not include registrations that end before `min_stay`. 
+>Gets all registrations for which the registration stay dates are on or after `min_stay`. In particular this includes registrations that start on `min_stay`, those that start before `min_stay` and end on or after it, and those that start after `min_stay`. This will not include registrations that end before `min_stay`. 
 
 **`max_stay: string`**
-Gets all registrations for which the registration stay dates are on or before `max_stay`. In particular this includes registrations that those that start before `max_stay` and end on or after it, and those that start after `max_stay`. This will not include registrations that start after `max_stay`. 
+>Gets all registrations for which the registration stay dates are on or before `max_stay`. In particular this includes registrations that those that start before `max_stay` and end on or after it, and those that start after `max_stay`. This will not include registrations that start after `max_stay`. 
 
-##### Responses
+#### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 200 | An array of registrations | [ [Registration](#definitions-Registration) ] 
 400 | An error | [Error](#definitions-Error) 
-
-### Models
-
+## Models
 <a name='definitions-Registration'></a>
-#### Registration
+
+### Registration
 
 A single registration by a guest to a program.
 
-##### Properties
+#### Properties
 
 **`id: string`**
-
-internal id of the object
+>internal id of the object
 
 **`self_url: string`**
-
-API URL pointing back to the object
+>API URL pointing back to the object
 
 **`submitted: string`**
-
-time the registration was submitted
+>time the registration was submitted
 
 **`start_date: string`**
-
-the day the guest's stay starts
+>the day the guest's stay starts
 
 **`end_date: string`**
-
-the day the guest's stay ends
+>the day the guest's stay ends
 
 **`status: string`**
-
-registration status [pending, reserved, cancelled, etc...]
+>registration status [pending, reserved, cancelled, etc...]
 
 **`first_name: string`**
-
-guest's first name
+>guest's first name
 
 **`last_name: string`**
-
-guest's last name
+>guest's last name
 
 **`full_name: string`**
-
-guest's full name
+>guest's full name
 
 **`email: string`**
-
-guest's email address
+>guest's email address
 
 **`program: string`**
-
-name of program the registration is for
+>name of program the registration is for
 
 **`program_url: string`**
-
-URL for API representation of program
+>URL for API representation of program
 
 **`program_categories: string`**
-
-categories for the program
+>categories for the program
 
 **`transactions_url: string`**
-
-API URL for registration's transactions (payment, refunds, items, discounts, etc...)
+>API URL for registration's transactions (payment, refunds, items, discounts, etc...)
 
 **`optional_items: string`**
-
-optional items (add-ons) selected for the registration
+>optional items (add-ons) selected for the registration
 
 **`room: string`**
-
-name of room guest will be staying in
+>name of room guest will be staying in
 
 **`lodging: string`**
-
-name of lodging type selected
+>name of lodging type selected
 
 **`nights: string`**
-
-total nights of stay
+>total nights of stay
 
 **`grand_total: string`**
-
-total amount owed for the registration
+>total amount owed for the registration
 
 **`balance_due: string`**
-
-current balance
+>current balance
 
 **`guest_statement_link: string`**
-
-link to the (user-facing) guest statement
+>link to the (user-facing) guest statement
 
 **`guest_edit_link: string`**
-
-link to guest edit page (where a guest can update their details)
+>link to guest edit page (where a guest can update their details)
 
 <a name='definitions-Error'></a>
-#### Error
+
+### Error
 
 An error returned in case of an incorrect request.
 
-##### Properties
+#### Properties
 
 **`message: string`**
-
-description of error and steps to correct it
+>description of error and steps to correct it
 
