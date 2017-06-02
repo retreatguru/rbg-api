@@ -1,6 +1,7 @@
 swagger: '2.0'
 info:
-  title: Booking Guru API v1
+  title: Booking Guru API
+  version: v1
   description: |
     Welcome to the Booking Guru API, we're glad you could make it. Let's poke around a bit.
 
@@ -64,60 +65,74 @@ info:
 
 # -------------------------------------------------------------------------------------------------
 
-schemes: https
+schemes: [https]
 basePath: /api/v1
-produces: application/json
+produces: [application/json]
   
 paths:
   /registrations:
     get:
-      summary: Registrations
+      summary: Get registrations
       description: |
-        Registration details including names, emails and programs people have registered to. Registrations are always sorted 
+        Retrieves registration details including names, emails and programs people have registered to. Registrations are always sorted 
         in reverse chronological order with the newest registrations are at the top or the result list.
 
       parameters:
         - name: token
+          in: query
           type: string
           description: Security token
           required: true
 
         - name: limit
+          in: query
           type: integer
           description: |
             Limit number of return values. The default limit is 20. Pass `limit=0` To get all the registrations without
             limits, but please use this with caution to not overload our servers.
 
         - name: id
-          type: integer[]
+          in: query
+          type: array
+          items:
+            type: integer
           description: |
             Gets registrations with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
 
         - name: program_id
+          in: query
           type: integer
           description: |
             Gets all the registrations for a particular program unique id. You can find the id in the program list 
             of your Booking Guru admin interface in the ID column.
 
         - name: min_date
-          type: date-only
+          in: query
+          type: string
+          format: date
           description: |
             Gets registrations that were submitted on or after `min_date`. Can be combined with `max_date` for a range of dates.
 
         - name: max_date
-          type: date-only
+          in: query
+          type: string
+          format: date
           description: |
             Gets registrations that were submitted on or before `max_date`.
 
         - name: min_stay
-          type: date-only
+          in: query
+          type: string
+          format: date
           description: |
             Gets all registrations for which the registration stay dates are on or after `min_stay`. In particular
             this includes registrations that start on `min_stay`, those that start before `min_stay` and end on or after it,
             and those that start after `min_stay`. This will not include registrations that end before `min_stay`.
 
         - name: max_stay
-          type: date-only
+          in: query
+          type: string
+          format: date
           description: |
             Gets all registrations for which the registration stay dates are on or before `max_stay`. In particular
             this includes registrations that those that start before `max_stay` and end on or after it,
@@ -127,19 +142,20 @@ paths:
       responses:
         200:
           description:
-            An array of registrations.
+            An array of registrations
           schema:
             type: array
             items:
               $ref: '#/definitions/Registration'
         400:
-          description: Error
+          description: An error
           schema:
             $ref: '#/definitions/Error'
 
 definitions:
   Registration:
     type: object
+    description: A single registration by a guest to a program.
     properties:
       id:
         type: string
@@ -213,6 +229,7 @@ definitions:
 
   Error:
     type: object
+    description: An error returned in case of an incorrect request.
     properties:
       message:
         type: string
