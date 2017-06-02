@@ -1,14 +1,68 @@
 swagger: '2.0'
 info:
-  title: Retreat Booking Guru API
-  version: "1.0.0"
+  title: Booking Guru API v1
   description: |
-    This is the API definition for Booking Guru, and online software package
-    designed for retreat centers to manage bookings, retreats, rooms and
-    finances. The API allows access to programs, registrations and transactions
-    that are stored within the system to allow integration with custom software.
-    The same API is also used in our Zapier integration that allows connecting
-    Booking Guru to other applications without the need for custom code.
+    Welcome to the Booking Guru API, we're glad you could make it. Let's poke around a bit.
+
+    And just in case you have no idea where you are, [Booking Guru](http://bookingsoftware.guru)
+    is a software package for spiritual retreat centers to manage programs, registrations, finances
+    and everything in between.
+
+    ## Token
+
+    The first thing you'll need is the security token for your installation. Go to the Reg. Settings
+    on your install, select the API tab and grab the token that appears there.
+
+    ![](resource/token.png "Where is my token?")
+
+    If there isn't a token there yet, hit *Generate Token*, then *Save changes* and then copy the token.
+
+    Set a couple of environment variables so it's easier to run the samples:
+
+    ```
+    $ export BGDOMAIN=<domain>
+    $ export BGTOKEN=<token>
+    ```
+
+    The `<domain>` is your install's domain, and `<token>` is the token you just got from the admin UI.
+
+    Lets take a look at some data.
+
+    ## CURL examples
+
+    Get latest 20 programs:
+
+    ```
+    $ curl "https://$BGDOMAIN/api/v1/programs?token=$BGTOKEN"
+    ```
+
+    Get latest 20 registrations:
+
+    ```
+    $ curl "https://$BGDOMAIN/api/v1/registrations?token=$BGTOKEN"
+    ```
+
+    Get all registrations (*dont' do this too often if you have a large install*):
+
+    ```
+    $ curl "https://$BGDOMAIN/api/v1/registrations?token=$BGTOKEN&limit=0"
+    ```
+
+    Get all registrations for a particular program:
+
+    ```
+    $ curl "https://$BGDOMAIN/api/v1registrations?token=$BGTOKEN&program_slug=3-day-escape"
+    ```
+
+    ## Examples
+
+    We're working on some deeper examples in PHP, Python and Javascript that we'll push to this repo real soon.
+
+    ## API Reference
+
+    Following is the reference for the requests you can currently do against the API.
+
+# -------------------------------------------------------------------------------------------------
 
 schemes: https
 basePath: /api/v1
@@ -19,13 +73,57 @@ paths:
     get:
       summary: Registrations
       description: |
-        Registration details including names, emails and programs people have registered to.
+        Registration details including names, emails and programs people have registered to. Registrations are always sorted 
+        in reverse chronological order with the newest registrations are at the top or the result list.
+
       parameters:
+        - name: token
+          type: string
+          description: Security token
+          required: true
+
         - name: limit
           type: integer
           description: |
             Limit number of return values. The default limit is 20. Pass `limit=0` To get all the registrations without
             limits, but please use this with caution to not overload our servers.
+
+        - name: id
+          type: integer[]
+          description: |
+            Gets registrations with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
+
+        - name: program_id
+          type: integer
+          description: |
+            Gets all the registrations for a particular program unique id. You can find the id in the program list 
+            of your Booking Guru admin interface in the ID column.
+
+        - name: min_date
+          type: date-only
+          description: |
+            Gets registrations that were submitted on or after `min_date`. Can be combined with `max_date` for a range of dates.
+
+        - name: max_date
+          type: date-only
+          description: |
+            Gets registrations that were submitted on or before `max_date`.
+
+        - name: min_stay
+          type: date-only
+          description: |
+            Gets all registrations for which the registration stay dates are on or after `min_stay`. In particular
+            this includes registrations that start on `min_stay`, those that start before `min_stay` and end on or after it,
+            and those that start after `min_stay`. This will not include registrations that end before `min_stay`.
+
+        - name: max_stay
+          type: date-only
+          description: |
+            Gets all registrations for which the registration stay dates are on or before `max_stay`. In particular
+            this includes registrations that those that start before `max_stay` and end on or after it,
+            and those that start after `max_stay`. This will not include registrations that start after `max_stay`.
+
+
       responses:
         200:
           description:
@@ -34,7 +132,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Registration'
-        default:
+        400:
           description: Error
           schema:
             $ref: '#/definitions/Error'
@@ -44,23 +142,78 @@ definitions:
     type: object
     properties:
       id:
-        type: integer
-      first_name:
         type: string
-      last_name:
+        description: internal id of the object
+      self_url:
         type: string
+        description: API URL pointing back to the object
+      submitted:
+        type: string
+        description: time the registration was submitted
+        format: date-time
       start_date:
         type: string
+        description: the day the guest's stay starts
         format: date
       end_date:
         type: string
+        description: the day the guest's stay ends
         format: date
-      submitted:
+      status:
         type: string
-        format: dateTime
+        description: registration status [pending, reserved, cancelled, etc...]
+      first_name:
+        type: string
+        description: guest's first name
+      last_name:
+        type: string
+        description: guest's last name
+      full_name:
+        type: string
+        description: guest's full name
+      email:
+        type: string
+        description: guest's email address
+      program:
+        type: string
+        description: name of program the registration is for
+      program_url:
+        type: string
+        description: URL for API representation of program
+      program_categories:
+        type: string
+        description: categories for the program
+      transactions_url:
+        type: string
+        description: API URL for registration's transactions (payment, refunds, items, discounts, etc...)
+      optional_items:
+        type: string
+        description: optional items (add-ons) selected for the registration
+      room:
+        type: string
+        description: name of room guest will be staying in
+      lodging:
+        type: string
+        description: name of lodging type selected
+      nights:
+        type: string
+        description: total nights of stay
+      grand_total:
+        type: string
+        description: total amount owed for the registration
+      balance_due:
+        type: string
+        description: current balance
+      guest_statement_link:
+        type: string
+        description: link to the (user-facing) guest statement
+      guest_edit_link:
+        type: string
+        description: link to guest edit page (where a guest can update their details)
 
   Error:
     type: object
     properties:
       message:
         type: string
+        description: description of error and steps to correct it
