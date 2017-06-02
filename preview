@@ -1,4 +1,0 @@
-#!/bin/sh
-./build
-github-markdown -s `pwd`/resource/github.css README.md > README.html
-open README.html
