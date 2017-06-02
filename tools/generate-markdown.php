@@ -105,7 +105,7 @@ function generate_markdown($spec) {
         foreach ($definition->properties as $propName => $property) {
             $required = (isset($property->required) ? '[required]' : '');
             $type = $property->type == 'array' ? '['.$property->items->type.']' : $property->type;
-            echo "**`$propName: $type$required`**\n";
+            echo "**`$propName: $type$required`**\n\n";
             echo str_replace("\n", ' ', $property->description)."\n\n";
         }
     }

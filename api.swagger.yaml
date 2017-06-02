@@ -9,7 +9,7 @@ info:
     is a software package for spiritual retreat centers to manage programs, registrations, finances
     and everything in between.
 
-    ## Token
+    ## Security token
 
     The first thing you'll need is the security token for your installation. Go to the Reg. Settings
     on your install, select the API tab and grab the token that appears there.
@@ -29,7 +29,7 @@ info:
 
     Lets take a look at some data.
 
-    ## CURL examples
+    ## Curl examples
 
     Get latest 20 programs:
 

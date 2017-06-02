@@ -7,7 +7,7 @@ And just in case you have no idea where you are, [Booking Guru](http://bookingso
 is a software package for spiritual retreat centers to manage programs, registrations, finances
 and everything in between.
 
-## Token
+## Security token
 
 The first thing you'll need is the security token for your installation. Go to the Reg. Settings
 on your install, select the API tab and grab the token that appears there.
@@ -27,7 +27,7 @@ The `<domain>` is your install's domain, and `<token>` is the token you just got
 
 Lets take a look at some data.
 
-## CURL examples
+## Curl examples
 
 Get latest 20 programs:
 
@@ -114,69 +114,91 @@ A single registration by a guest to a program.
 ##### Properties
 
 **`id: string`**
+
 internal id of the object
 
 **`self_url: string`**
+
 API URL pointing back to the object
 
 **`submitted: string`**
+
 time the registration was submitted
 
 **`start_date: string`**
+
 the day the guest's stay starts
 
 **`end_date: string`**
+
 the day the guest's stay ends
 
 **`status: string`**
+
 registration status [pending, reserved, cancelled, etc...]
 
 **`first_name: string`**
+
 guest's first name
 
 **`last_name: string`**
+
 guest's last name
 
 **`full_name: string`**
+
 guest's full name
 
 **`email: string`**
+
 guest's email address
 
 **`program: string`**
+
 name of program the registration is for
 
 **`program_url: string`**
+
 URL for API representation of program
 
 **`program_categories: string`**
+
 categories for the program
 
 **`transactions_url: string`**
+
 API URL for registration's transactions (payment, refunds, items, discounts, etc...)
 
 **`optional_items: string`**
+
 optional items (add-ons) selected for the registration
 
 **`room: string`**
+
 name of room guest will be staying in
 
 **`lodging: string`**
+
 name of lodging type selected
 
 **`nights: string`**
+
 total nights of stay
 
 **`grand_total: string`**
+
 total amount owed for the registration
 
 **`balance_due: string`**
+
 current balance
 
 **`guest_statement_link: string`**
+
 link to the (user-facing) guest statement
 
 **`guest_edit_link: string`**
+
 link to guest edit page (where a guest can update their details)
 
 <a name='definitions-Error'></a>
@@ -187,5 +209,6 @@ An error returned in case of an incorrect request.
 ##### Properties
 
 **`message: string`**
+
 description of error and steps to correct it
 
