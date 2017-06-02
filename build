@@ -1,4 +1,4 @@
 #!/bin/sh
-[ -d node_modules/swagger-markdown ] || npm install --no-save swagger-markdown
-node_modules/.bin/swagger-markdown -i api.swagger.yaml -o README.md
-sed -i '' $'s/<a name/\\\n<a name/g' README.md
+[ -d tools/vendor ] || $(cd tools && composer install)
+php tools/generate-markdown.php api.swagger.yaml > README.md
+echo README.md was regenerated

@@ -1,5 +1,6 @@
 Booking Guru API v1
 ===================
+
 Welcome to the Booking Guru API, we're glad you could make it. Let's poke around a bit.
 
 And just in case you have no idea where you are, [Booking Guru](http://bookingsoftware.guru)
@@ -59,71 +60,132 @@ We're working on some deeper examples in PHP, Python and Javascript that we'll p
 ## API Reference
 
 Following is the reference for the requests you can currently do against the API.
-
-
 ### /registrations
----
-##### ***GET***
-**Summary:** Registrations
 
-**Description:** Registration details including names, emails and programs people have registered to. Registrations are always sorted 
+---
+
+#### *GET*
+
+##### Get registrations
+
+Retrieves registration details including names, emails and programs people have registered to. Registrations are always sorted 
 in reverse chronological order with the newest registrations are at the top or the result list.
 
+##### Parameters
 
-**Parameters**
+**`token: string[required]`**
+Security token
 
-| Name | Located in | Description | Required | Schema |
-| ---- | ---------- | ----------- | -------- | ---- |
-| token |  | Security token | Yes | string |
-| limit |  | Limit number of return values. The default limit is 20. Pass `limit=0` To get all the registrations without limits, but please use this with caution to not overload our servers.  | No | integer |
-| id |  | Gets registrations with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.  | No | integer[] |
-| program_id |  | Gets all the registrations for a particular program unique id. You can find the id in the program list  of your Booking Guru admin interface in the ID column.  | No | integer |
-| min_date |  | Gets registrations that were submitted on or after `min_date`. Can be combined with `max_date` for a range of dates.  | No | date-only |
-| max_date |  | Gets registrations that were submitted on or before `max_date`.  | No | date-only |
-| min_stay |  | Gets all registrations for which the registration stay dates are on or after `min_stay`. In particular this includes registrations that start on `min_stay`, those that start before `min_stay` and end on or after it, and those that start after `min_stay`. This will not include registrations that end before `min_stay`.  | No | date-only |
-| max_stay |  | Gets all registrations for which the registration stay dates are on or before `max_stay`. In particular this includes registrations that those that start before `max_stay` and end on or after it, and those that start after `max_stay`. This will not include registrations that start after `max_stay`.  | No | date-only |
+**`limit: integer`**
+Limit number of return values. The default limit is 20. Pass `limit=0` To get all the registrations without limits, but please use this with caution to not overload our servers. 
 
-**Responses**
+**`id: [integer]`**
+Gets registrations with a specific id or list of ids. To get multiple objects, provide a comma separated list of values. 
+
+**`program_id: integer`**
+Gets all the registrations for a particular program unique id. You can find the id in the program list  of your Booking Guru admin interface in the ID column. 
+
+**`min_date: string`**
+Gets registrations that were submitted on or after `min_date`. Can be combined with `max_date` for a range of dates. 
+
+**`max_date: string`**
+Gets registrations that were submitted on or before `max_date`. 
+
+**`min_stay: string`**
+Gets all registrations for which the registration stay dates are on or after `min_stay`. In particular this includes registrations that start on `min_stay`, those that start before `min_stay` and end on or after it, and those that start after `min_stay`. This will not include registrations that end before `min_stay`. 
+
+**`max_stay: string`**
+Gets all registrations for which the registration stay dates are on or before `max_stay`. In particular this includes registrations that those that start before `max_stay` and end on or after it, and those that start after `max_stay`. This will not include registrations that start after `max_stay`. 
+
+##### Responses
 
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
-| 200 | An array of registrations. | [ [Registration](#registration) ] |
-| 400 | Error | [Error](#error) |
+200 | An array of registrations | [ [Registration](#definitions-Registration) ] 
+400 | An error | [Error](#definitions-Error) 
 
 ### Models
----
 
+<a name='definitions-Registration'></a>
+#### Registration
 
-<a name="registration"></a>**Registration**  
+A single registration by a guest to a program.
 
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| id | string | internal id of the object | No |
-| self_url | string | API URL pointing back to the object | No |
-| submitted | dateTime | time the registration was submitted | No |
-| start_date | date | the day the guest's stay starts | No |
-| end_date | date | the day the guest's stay ends | No |
-| status | string | registration status [pending, reserved, cancelled, etc...] | No |
-| first_name | string | guest's first name | No |
-| last_name | string | guest's last name | No |
-| full_name | string | guest's full name | No |
-| email | string | guest's email address | No |
-| program | string | name of program the registration is for | No |
-| program_url | string | URL for API representation of program | No |
-| program_categories | string | categories for the program | No |
-| transactions_url | string | API URL for registration's transactions (payment, refunds, items, discounts, etc...) | No |
-| optional_items | string | optional items (add-ons) selected for the registration | No |
-| room | string | name of room guest will be staying in | No |
-| lodging | string | name of lodging type selected | No |
-| nights | string | total nights of stay | No |
-| grand_total | string | total amount owed for the registration | No |
-| balance_due | string | current balance | No |
-| guest_statement_link | string | link to the (user-facing) guest statement | No |
-| guest_edit_link | string | link to guest edit page (where a guest can update their details) | No |
+##### Properties
 
+**`id: string`**
+internal id of the object
 
-<a name="error"></a>**Error**  
+**`self_url: string`**
+API URL pointing back to the object
 
-| Name | Type | Description | Required |
-| ---- | ---- | ----------- | -------- |
-| message | string | description of error and steps to correct it | No |
+**`submitted: string`**
+time the registration was submitted
+
+**`start_date: string`**
+the day the guest's stay starts
+
+**`end_date: string`**
+the day the guest's stay ends
+
+**`status: string`**
+registration status [pending, reserved, cancelled, etc...]
+
+**`first_name: string`**
+guest's first name
+
+**`last_name: string`**
+guest's last name
+
+**`full_name: string`**
+guest's full name
+
+**`email: string`**
+guest's email address
+
+**`program: string`**
+name of program the registration is for
+
+**`program_url: string`**
+URL for API representation of program
+
+**`program_categories: string`**
+categories for the program
+
+**`transactions_url: string`**
+API URL for registration's transactions (payment, refunds, items, discounts, etc...)
+
+**`optional_items: string`**
+optional items (add-ons) selected for the registration
+
+**`room: string`**
+name of room guest will be staying in
+
+**`lodging: string`**
+name of lodging type selected
+
+**`nights: string`**
+total nights of stay
+
+**`grand_total: string`**
+total amount owed for the registration
+
+**`balance_due: string`**
+current balance
+
+**`guest_statement_link: string`**
+link to the (user-facing) guest statement
+
+**`guest_edit_link: string`**
+link to guest edit page (where a guest can update their details)
+
+<a name='definitions-Error'></a>
+#### Error
+
+An error returned in case of an incorrect request.
+
+##### Properties
+
+**`message: string`**
+description of error and steps to correct it
+
