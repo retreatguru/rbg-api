@@ -6,10 +6,6 @@ And just in case you have no idea where you are, [Booking Guru](http://bookingso
 is a software package for spiritual retreat centers to manage programs, registrations, finances
 and everything in between.
 
-The full API is listed below and is also available here:
-
-https://rawgit.com/retreatguru/rbg-api/master/api.html
-
 ## Token
 
 The first thing you'll need is the security token for your installation. Go to the Reg. Settings
