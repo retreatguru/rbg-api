@@ -52,7 +52,7 @@ info:
     Get all registrations for a particular program:
 
     ```
-    $ curl "https://$BGDOMAIN/api/v1registrations?token=$BGTOKEN&program_slug=3-day-escape"
+    $ curl "https://$BGDOMAIN/api/v1/registrations?token=$BGTOKEN&program_slug=3-day-escape"
     ```
 
     ## Examples
@@ -63,7 +63,11 @@ info:
 
     Following is the reference for the requests you can currently do against the API.
 
-    All values with the `date` type are in `YYYY-MM-DD` format, all values with the `date-time` type are in the `YYYY-MM-DDTHH:MM:SS` format.
+    *Notes:*
+
+    1. All values with the `date` type are in `YYYY-MM-DD` format, all values with the `date-time` type are in the `YYYY-MM-DDTHH:MM:SS` format.
+
+    2. If a parameters can take multiple values (the `id` parameter usually does) provide multiple values separated by commas without spaces.
 
 # -------------------------------------------------------------------------------------------------
 
@@ -89,7 +93,7 @@ paths:
           in: query
           type: integer
           description: |
-            Limit number of return values. The default limit is 20. Pass `limit=0` To get all the programs without
+            Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
             limits, but please use this with caution to not overload our servers.
 
         - name: id
@@ -118,7 +122,7 @@ paths:
       summary: Get registration info
       description: |
         Retrieves registration details including names, emails and programs people have registered to. Registrations are always sorted 
-        in reverse chronological order with the newest registrations are at the top or the result list.
+        in reverse chronological order with the newest registrations at the top or the result list.
 
       parameters:
         - name: token
@@ -131,7 +135,7 @@ paths:
           in: query
           type: integer
           description: |
-            Limit number of return values. The default limit is 20. Pass `limit=0` To get all the registrations without
+            Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
             limits, but please use this with caution to not overload our servers.
 
         - name: id
@@ -140,14 +144,13 @@ paths:
           items:
             type: integer
           description: |
-            Gets registrations with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
+            Gets registrations with a specific id or list of ids.
 
         - name: program_id
           in: query
           type: integer
           description: |
-            Gets all the registrations for a particular program unique id. You can find the id in the program list 
-            of your Booking Guru admin interface in the ID column.
+            Gets all the registrations for a specific program.
 
         - name: min_date
           in: query
@@ -193,6 +196,105 @@ paths:
           description: An error
           schema:
             $ref: '#/definitions/Error'
+
+  /transactions:
+    get:
+      summary: Get transaction info
+      description: |
+        Transactions represent the financial details of the registration, including items the guest has purchased, discounts, taxes,
+        credit card payments, cash payments and any other custom transaction type you may have defined on your install.
+
+        Transactions are always sorted in reverse chronological order with the newest transaction at the top or the result list.
+
+      parameters:
+        - name: token
+          in: query
+          type: string
+          description: Security token
+          required: true
+
+        - name: limit
+          in: query
+          type: integer
+          description: |
+            Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
+            limits, but please use this with caution to not overload our servers.
+
+        - name: id
+          in: query
+          type: array
+          items:
+            type: integer
+          description: |
+            Filter transactions with a specific id or list of ids.
+
+        - name: class
+          in: query
+          type: array
+          items:
+            type: string
+          description: |
+            Filter transactions by class. Classes are hard coded and segment transaction into 8 broad categories:
+
+            * `item` - an item the guest needs to pay for
+            * `discount` - a discount the guest has received
+            * `card-payment` - a credit card payment
+            * `card-refund` - a credit card refund
+            * `non-cc-payment` - a non credit card payment (cash, wire transfer, etc)
+            * `non-cc-refund` - a non credit card refund
+            * `person-credit` - personal credit was added for the guest
+            * `person-debit` - personal credit was used for payment
+
+        - name: program_id
+          in: query
+          type: integer
+          description: |
+            Filter transactions for a specific program.
+
+        - name: registration_id
+          in: query
+          type: array
+          items:
+            type: integer
+          description: |
+            Filter transactions for a specific registration or registrations.
+
+        - name: min_date
+          in: query
+          type: string
+          format: date
+          description: |
+            Filter transactions that were submitted on or after this date.
+
+
+        - name: max_date
+          in: query
+          type: string
+          format: date
+          description: |
+            Filter transactions that were submitted on or before this date.
+
+        - name: category
+          in: query
+          type: array
+          items:
+            type: string
+          description: |
+            Filter transactions by category. Categories are user defined and can be very specific.
+
+      responses:
+        200:
+          description:
+            An array of transactions
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Transaction'
+        400:
+          description: An error
+          schema:
+            $ref: '#/definitions/Error'
+
 
 definitions:
 
@@ -313,6 +415,154 @@ definitions:
         type: string
         format: url
         description: link to guest edit page (where a guest can update their details)
+      questions:
+        type: array
+        description: an array of all the custom fields that have been configured for the program for which this registration was entered
+
+  Transaction:
+    type: object
+    description: A single transaction
+    properties:
+      id:
+        type: integer
+        description: internal unique id
+
+      self_url:
+        type: string
+        description: API URL pointing back to the object
+
+      submitted:
+        type: string
+        format: date-time
+        description: exact time when transaction was submitted
+
+      trans_date:
+        type: string
+        format: date-time
+        description: exact time of the transaction (can be modified manually, as opposed to `submitted`)
+
+      program_id:
+        type: string
+        description: id of program for which this transaction was made
+
+      program_name:
+        type: string
+        description: name of program for which this transaction was made
+
+      program_url:
+        type: string
+        description: API URL of program for which this transaction was made
+
+      class:
+        type: string
+        description: coarce grained classification of transactions
+
+      category:
+        type: string
+        description: fine grained (and user defined) classification of transactions
+
+      # description:
+      #   type: string
+      #   description:
+
+      # status:
+      #   type: string
+      #   description:
+
+      # notes:
+      #   type: string
+      #   description:
+
+      # staff_name:
+      #   type: string
+      #   description:
+
+      # charge_amount:
+      #   type: string
+      #   description:
+
+      # credit_amount:
+      #   type: string
+      #   description:
+
+
+      # person_id:
+      #   type: string
+      #   description:
+
+      # person_name:
+      #   type: string
+      #   description:
+
+      # registration_id:
+      #   type: string
+      #   description:
+
+      # registration_url:
+      #   type: string
+      #   description:
+
+
+      # discount_amount:
+      #   type: string
+      #   description:
+
+      # discount_percent:
+      #   type: string
+      #   description:
+
+      # subtotal:
+      #   type: string
+      #   description:
+
+      # tax_1_info:
+      #   type: string
+      #   description:
+
+      # tax_1_amount:
+      #   type: string
+      #   description:
+
+      # tax_2_info:
+      #   type: string
+      #   description:
+
+      # tax_2_amount:
+      #   type: string
+      #   description:
+
+      # grand_total:
+      #   type: string
+      #   description:
+
+      # is_addon:
+      #   type: string
+      #   description:
+
+
+      # fund_method:
+      #   type: string
+      #   description:
+
+      # merchant_name:
+      #   type: string
+      #   description:
+
+      # merchant_trans_id:
+      #   type: string
+      #   description:
+
+      # merchant_profile:
+      #   type: string
+      #   description:
+
+      # merchant_account:
+      #   type: string
+      #   description:
+
+      # merchant_cc_details:
+      #   type: string
+      #   description:
 
 
   Error:

@@ -46,12 +46,16 @@ function validate($spec) {
 function _parse_ref($object) {
     $arr = (array)$object;
     $name = str_replace('#/definitions/', '', $arr['$ref']);
-    return "[$name](#definitions-$name)";
+    return "[$name](#".strtolower($name).')';
 }
 
 function _make_type($field) {
     if ($field->type == 'array') {
-        return '['.$field->items->type.']';
+        if (isset($field->items->type)) {
+            return '['.$field->items->type.']';
+        } else {
+            return 'array';
+        }
     } else {
         if (isset($field->format)) {
             return $field->format;
@@ -87,8 +91,8 @@ function generate_markdown($spec) {
             foreach ($methodInfo->parameters as $parameter) {
                 $required = (isset($parameter->required) ? ' [required]' : '');
                 $type = _make_type($parameter);
-                echo "**`$parameter->name: $type$required`**\n";
-                echo '>'.str_replace("\n", ' ', $parameter->description)."\n\n";
+                echo "***$parameter->name: $type$required***\n\n";
+                echo trim($parameter->description)."\n\n";
             }
 
             echo "#### Responses\n\n";
@@ -111,9 +115,8 @@ function generate_markdown($spec) {
 
     // generate model descriptions
     foreach ($spec->definitions as $name => $definition) {
-        echo "<a name='definitions-$name'></a>\n\n";
         echo "### $name\n\n";
-        echo "$definition->description\n";
+        echo trim($definition->description)."\n";
         echo "\n";
 
         echo "#### Properties\n\n";
