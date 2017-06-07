@@ -76,18 +76,23 @@ Retrieves information about programs, their dates and and categories.
 
 #### Parameters
 
-***token: string [required]***
+***token: string (required)***
 
 Security token
+
+***id: [integer]***
+
+Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
 
 ***limit: integer***
 
 Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
 limits, but please use this with caution to not overload our servers.
 
-***id: [integer]***
+***page: integer***
 
-Gets programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
+Get further pages of results. By default the first `limit` results is returned, to get further results
+pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
 #### Responses
 
@@ -106,18 +111,23 @@ in reverse chronological order with the newest registrations at the top or the r
 
 #### Parameters
 
-***token: string [required]***
+***token: string (required)***
 
 Security token
+
+***id: [integer]***
+
+Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
 
 ***limit: integer***
 
 Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
 limits, but please use this with caution to not overload our servers.
 
-***id: [integer]***
+***page: integer***
 
-Gets registrations with a specific id or list of ids.
+Get further pages of results. By default the first `limit` results is returned, to get further results
+pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
 ***program_id: integer***
 
@@ -162,18 +172,23 @@ Transactions are always sorted in reverse chronological order with the newest tr
 
 #### Parameters
 
-***token: string [required]***
+***token: string (required)***
 
 Security token
+
+***id: [integer]***
+
+Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
 
 ***limit: integer***
 
 Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
 limits, but please use this with caution to not overload our servers.
 
-***id: [integer]***
+***page: integer***
 
-Filter transactions with a specific id or list of ids.
+Get further pages of results. By default the first `limit` results is returned, to get further results
+pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
 ***class: [string]***
 
@@ -215,7 +230,76 @@ Filter transactions by category. Categories are user defined and can be very spe
 200 | An array of transactions | [ [Transaction](#transaction) ] 
 400 | An error | [Error](#error) 
 
+---
+
+### GET /payments
+**Get payment transaction info**
+
+Payments
+
+#### Parameters
+
+***token: string (required)***
+
+Security token
+
+***id: [integer]***
+
+Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
+
+***limit: integer***
+
+Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
+limits, but please use this with caution to not overload our servers.
+
+***page: integer***
+
+Get further pages of results. By default the first `limit` results is returned, to get further results
+pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
+
+#### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+200 | An array of payments | [ [Payment](#payment) ] 
+400 | An error | [Error](#error) 
+
+---
+
+### GET /items
+**Get item transaction info**
+
+Items
+
+#### Parameters
+
+***token: string (required)***
+
+Security token
+
+***id: [integer]***
+
+Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
+
+***limit: integer***
+
+Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
+limits, but please use this with caution to not overload our servers.
+
+***page: integer***
+
+Get further pages of results. By default the first `limit` results is returned, to get further results
+pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
+
+#### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+200 | An array of items | [ [Item](#item) ] 
+400 | An error | [Error](#error) 
+
 ## Models
+
 ### Program
 
 A single program
@@ -230,8 +314,11 @@ A single program
 | start_date | string | program start date |
 | end_date | string | program end date |
 | registrations_url | string | API URL for program registrations |
-| transactions_url | string | API URL for program transactions |
+| transactions_url | string | API URL for all program transactions (includs payments and items) |
+| payments_url | string | API URL for program payments |
+| items_url | string | API URL for program items |
 | teachers | [string] | teacher names for the program |
+
 ### Registration
 
 A single registration by a guest to a program.
@@ -245,7 +332,7 @@ A single registration by a guest to a program.
 | submitted | date-time | time the registration was submitted |
 | start_date | date | the day the guest's stay starts |
 | end_date | date | the day the guest's stay ends |
-| status | string | registration status [pending, reserved, cancelled, etc...] |
+| status | string | registration status (reserved, pending, need-approval, unconfirmed, cancelled, arrived, checked-out, duplicate) |
 | first_name | string | guest's first name |
 | last_name | string | guest's last name |
 | full_name | string | guest's full name |
@@ -253,16 +340,19 @@ A single registration by a guest to a program.
 | program | string | name of program the registration is for |
 | program_url | url | URL for API representation of program |
 | program_categories | [string] | categories for the program |
-| transactions_url | url | API URL for registration's transactions |
+| transactions_url | url | API URL for all registration's transactions |
+| payments_url | url | API URL for registration's item transactions |
+| items_url | url | API URL for registration's payment transactions |
 | optional_items | [string] | optional items (add-ons) selected for the registration |
 | room | string | name of room guest will be staying in |
 | lodging | string | name of lodging type selected |
 | nights | integer | total nights of stay |
-| grand_total | decimal | total amount owed for the registration |
-| balance_due | decimal | current balance |
+| grand_total | number | total amount owed for the registration |
+| balance_due | number | current balance |
 | guest_statement_link | url | link to the (user-facing) guest statement |
 | guest_edit_link | url | link to guest edit page (where a guest can update their details) |
 | questions | array | an array of all the custom fields that have been configured for the program for which this registration was entered |
+
 ### Transaction
 
 A single transaction
@@ -275,11 +365,55 @@ A single transaction
 | self_url | string | API URL pointing back to the object |
 | submitted | date-time | exact time when transaction was submitted |
 | trans_date | date-time | exact time of the transaction (can be modified manually, as opposed to `submitted`) |
-| program_id | string | id of program for which this transaction was made |
-| program_name | string | name of program for which this transaction was made |
-| program_url | string | API URL of program for which this transaction was made |
 | class | string | coarce grained classification of transactions |
 | category | string | fine grained (and user defined) classification of transactions |
+| status | string | transaction status (complete, cancel) |
+| description | string | transaction description (auto-generated or user-entered in the admin interface) |
+| notes | string | notes entered about the transaction by the admin |
+| staff_name | string | username of staff member who entered the transaction (if manually entered in the admin interface) |
+| program_name | string | name of program for which this transaction was made |
+| program_url | string | API URL of program for which this transaction was made |
+| person_name | string | name of person on the registration |
+| registration_url | string | API URL of connected registration object |
+| details_url | string | API URL of detailed payment or item object |
+| charge_amount | number | amount that was charged (usually used for purchased items) |
+| credit_amount | number | amount that was credited (usually used for payments made) |
+
+### Payment
+
+A single payment or refund transaction. The object includes all fields in Transaction and additional
+fields that are only relevant for payments made by the guest.
+
+#### Properties
+
+| Name | Type | Description |
+| ---- |----- | ----------- |
+| fund_method | string | type of funding |
+| merchant_name | string | name of credit card processor (e.g. Paypal) |
+| merchant_trans_id | string | transaction id as recorded by credit card processor |
+| merchant_profile | string | profile id as recorded by credit card processor |
+| merchant_account | string | name of account the transaction was made on |
+| merchant_cc_details | string | credit card details as recorded by credit card processor |
+
+### Item
+
+A single item or discount transaction. The object includes all fields in Transaction and additional
+fields that are only relevant for items purchased by the guest.
+
+#### Properties
+
+| Name | Type | Description |
+| ---- |----- | ----------- |
+| is_addon | boolean | is this item an addon (an optional item) selected by the guest |
+| discount_amount | string | discount amount (either entered directly or calculated from `discount_percent`) |
+| discount_percent | string | discount percentage |
+| subtotal | string | total after applying discount, before applying taxes |
+| tax_1_info | string | first tax description |
+| tax_1_amount | string | first tax amount |
+| tax_2_info | string | second tax description |
+| tax_2_amount | string | second tax amount |
+| grand_total | string | total after applying discount and taxes |
+
 ### Error
 
 An error returned in case of an incorrect request.

@@ -5,7 +5,7 @@
  * This script validates a Swagger YAML definition according to the Swagger 2.0 schema
  * and generates Markdown documentation from the API definition.
  *
- * It's very limited in application and only implements that constructs we are using
+ * It's very limited in application and only implements the constructs we are using
  * for our API, but allows us full control over how the generated documentation looks,
  * which is arguably worth it.
  * 
@@ -43,13 +43,19 @@ function validate($spec) {
     return $result;
 }
 
+/**
+ * Parses a $ref reference in Swagger and returns a markdown link.
+ */
 function _parse_ref($object) {
     $arr = (array)$object;
     $name = str_replace('#/definitions/', '', $arr['$ref']);
     return "[$name](#".strtolower($name).')';
 }
 
-function _make_type($field) {
+/**
+ * Parses type definition and returns markdown text describing it.
+ */
+function _parse_type($field) {
     if ($field->type == 'array') {
         if (isset($field->items->type)) {
             return '['.$field->items->type.']';
@@ -89,8 +95,13 @@ function generate_markdown($spec) {
             echo "#### Parameters\n\n";
 
             foreach ($methodInfo->parameters as $parameter) {
-                $required = (isset($parameter->required) ? ' [required]' : '');
-                $type = _make_type($parameter);
+                $parameterArray = (array)$parameter;
+                if (isset($parameterArray['$ref'])) {
+                    $parameterName = str_replace('#/parameters/', '', $parameterArray['$ref']);
+                    $parameter = $spec->parameters->$parameterName;
+                }
+                $required = (isset($parameter->required) ? ' (required)' : '');
+                $type = _parse_type($parameter);
                 echo "***$parameter->name: $type$required***\n\n";
                 echo trim($parameter->description)."\n\n";
             }
@@ -115,7 +126,7 @@ function generate_markdown($spec) {
 
     // generate model descriptions
     foreach ($spec->definitions as $name => $definition) {
-        echo "### $name\n\n";
+        echo "\n### $name\n\n";
         echo trim($definition->description)."\n";
         echo "\n";
 
@@ -125,8 +136,12 @@ function generate_markdown($spec) {
         echo "| ---- |----- | ----------- |\n";
 
         foreach ($definition->properties as $propName => $property) {
-            $type = _make_type($property);
-            echo "| $propName | $type | $property->description |\n";
+            $type = _parse_type($property);
+            $description = $property->description;
+            if (isset($property->enum)) {
+                $description .= ' ('.implode(', ', $property->enum).')';
+            }
+            echo "| $propName | $type | $description |\n";
         }
     }
 }

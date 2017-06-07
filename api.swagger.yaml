@@ -83,26 +83,10 @@ paths:
         Retrieves information about programs, their dates and and categories.
 
       parameters:
-        - name: token
-          in: query
-          type: string
-          description: Security token
-          required: true
-
-        - name: limit
-          in: query
-          type: integer
-          description: |
-            Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
-            limits, but please use this with caution to not overload our servers.
-
-        - name: id
-          in: query
-          type: array
-          items:
-            type: integer
-          description: |
-            Gets programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
+        - $ref: '#/parameters/token'
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/page'
 
       responses:
         200:
@@ -125,26 +109,10 @@ paths:
         in reverse chronological order with the newest registrations at the top or the result list.
 
       parameters:
-        - name: token
-          in: query
-          type: string
-          description: Security token
-          required: true
-
-        - name: limit
-          in: query
-          type: integer
-          description: |
-            Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
-            limits, but please use this with caution to not overload our servers.
-
-        - name: id
-          in: query
-          type: array
-          items:
-            type: integer
-          description: |
-            Gets registrations with a specific id or list of ids.
+        - $ref: '#/parameters/token'
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/page'
 
         - name: program_id
           in: query
@@ -207,26 +175,10 @@ paths:
         Transactions are always sorted in reverse chronological order with the newest transaction at the top or the result list.
 
       parameters:
-        - name: token
-          in: query
-          type: string
-          description: Security token
-          required: true
-
-        - name: limit
-          in: query
-          type: integer
-          description: |
-            Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
-            limits, but please use this with caution to not overload our servers.
-
-        - name: id
-          in: query
-          type: array
-          items:
-            type: integer
-          description: |
-            Filter transactions with a specific id or list of ids.
+        - $ref: '#/parameters/token'
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/page'
 
         - name: class
           in: query
@@ -293,8 +245,95 @@ paths:
         400:
           description: An error
           schema:
+
             $ref: '#/definitions/Error'
 
+  /payments:
+    get:
+      summary: Get payment transaction info
+      description: |
+        Payments
+      parameters:
+        - $ref: '#/parameters/token'
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/page'
+
+      responses:
+        200:
+          description:
+            An array of payments
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Payment'
+        400:
+          description: An error
+          schema:
+
+            $ref: '#/definitions/Error'
+
+  /items:
+    get:
+      summary: Get item transaction info
+      description: |
+        Items
+      parameters:
+        - $ref: '#/parameters/token'
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/page'
+        
+
+      responses:
+        200:
+          description:
+            An array of items
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Item'
+        400:
+          description: An error
+          schema:
+
+            $ref: '#/definitions/Error'
+
+
+parameters:
+
+    token:
+      name: token
+      in: query
+      type: string
+      description: Security token
+      required: true
+
+
+    page:
+      name: page
+      in: query
+      type: integer
+      description: |
+        Get further pages of results. By default the first `limit` results is returned, to get further results
+        pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
+
+    id:
+      name: id
+      in: query
+      type: array
+      items:
+        type: integer
+      description: |
+        Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
+
+    limit:
+      name: limit
+      in: query
+      type: integer
+      description: |
+        Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
+        limits, but please use this with caution to not overload our servers.
 
 definitions:
 
@@ -323,7 +362,13 @@ definitions:
         description: API URL for program registrations
       transactions_url:
         type: string
-        description: API URL for program transactions
+        description: API URL for all program transactions (includs payments and items)
+      payments_url:
+        type: string
+        description: API URL for program payments
+      items_url:
+        type: string
+        description: API URL for program items
       teachers:
         type: array
         items:
@@ -355,7 +400,8 @@ definitions:
         format: date
       status:
         type: string
-        description: registration status [pending, reserved, cancelled, etc...]
+        enum: [reserved, pending, need-approval, unconfirmed, cancelled, arrived, checked-out, duplicate]
+        description: registration status
       first_name:
         type: string
         description: guest's first name
@@ -384,7 +430,15 @@ definitions:
       transactions_url:
         type: string
         format: url
-        description: API URL for registration's transactions
+        description: API URL for all registration's transactions
+      payments_url:
+        type: string
+        format: url
+        description: API URL for registration's item transactions
+      items_url:
+        type: string
+        format: url
+        description: API URL for registration's payment transactions
       optional_items:
         type: array
         items:
@@ -400,12 +454,10 @@ definitions:
         type: integer
         description: total nights of stay
       grand_total:
-        type: string
-        format: decimal
+        type: number
         description: total amount owed for the registration
       balance_due:
-        type: string
-        format: decimal
+        type: number
         description: current balance
       guest_statement_link:
         type: string
@@ -441,9 +493,30 @@ definitions:
         format: date-time
         description: exact time of the transaction (can be modified manually, as opposed to `submitted`)
 
-      program_id:
+      class:
         type: string
-        description: id of program for which this transaction was made
+        description: coarce grained classification of transactions
+
+      category:
+        type: string
+        description: fine grained (and user defined) classification of transactions
+
+      status:
+        type: string
+        enum: [complete, cancel]
+        description: transaction status
+
+      description:
+        type: string
+        description: transaction description (auto-generated or user-entered in the admin interface)
+
+      notes:
+        type: string
+        description: notes entered about the transaction by the admin
+
+      staff_name:
+        type: string
+        description: username of staff member who entered the transaction (if manually entered in the admin interface)
 
       program_name:
         type: string
@@ -453,117 +526,85 @@ definitions:
         type: string
         description: API URL of program for which this transaction was made
 
-      class:
+      person_name:
         type: string
-        description: coarce grained classification of transactions
+        description: name of person on the registration
 
-      category:
+      registration_url:
         type: string
-        description: fine grained (and user defined) classification of transactions
+        description: API URL of connected registration object
 
-      # description:
-      #   type: string
-      #   description:
+      details_url:
+        type: string
+        description: API URL of detailed payment or item object
 
-      # status:
-      #   type: string
-      #   description:
+      charge_amount:
+        type: number
+        description: amount that was charged (usually used for purchased items)
 
-      # notes:
-      #   type: string
-      #   description:
+      credit_amount:
+        type: number
+        description: amount that was credited (usually used for payments made)
 
-      # staff_name:
-      #   type: string
-      #   description:
+  Payment:
+    type: object
+    description: |
+      A single payment or refund transaction. The object includes all fields in Transaction and additional
+      fields that are only relevant for payments made by the guest.
+    properties:
+      fund_method:
+          type: string
+          description: type of funding
+      merchant_name:
+          type: string
+          description: name of credit card processor (e.g. Paypal)
+      merchant_trans_id:
+          type: string
+          description: transaction id as recorded by credit card processor
+      merchant_profile:
+          type: string
+          description: profile id as recorded by credit card processor
+      merchant_account:
+          type: string
+          description: name of account the transaction was made on
+      merchant_cc_details:
+          type: string
+          description: credit card details as recorded by credit card processor
 
-      # charge_amount:
-      #   type: string
-      #   description:
+  Item:
+    type: object
+    description: |
+      A single item or discount transaction. The object includes all fields in Transaction and additional
+      fields that are only relevant for items purchased by the guest.
+    properties:
 
-      # credit_amount:
-      #   type: string
-      #   description:
-
-
-      # person_id:
-      #   type: string
-      #   description:
-
-      # person_name:
-      #   type: string
-      #   description:
-
-      # registration_id:
-      #   type: string
-      #   description:
-
-      # registration_url:
-      #   type: string
-      #   description:
-
-
-      # discount_amount:
-      #   type: string
-      #   description:
-
-      # discount_percent:
-      #   type: string
-      #   description:
-
-      # subtotal:
-      #   type: string
-      #   description:
-
-      # tax_1_info:
-      #   type: string
-      #   description:
-
-      # tax_1_amount:
-      #   type: string
-      #   description:
-
-      # tax_2_info:
-      #   type: string
-      #   description:
-
-      # tax_2_amount:
-      #   type: string
-      #   description:
-
-      # grand_total:
-      #   type: string
-      #   description:
-
-      # is_addon:
-      #   type: string
-      #   description:
-
-
-      # fund_method:
-      #   type: string
-      #   description:
-
-      # merchant_name:
-      #   type: string
-      #   description:
-
-      # merchant_trans_id:
-      #   type: string
-      #   description:
-
-      # merchant_profile:
-      #   type: string
-      #   description:
-
-      # merchant_account:
-      #   type: string
-      #   description:
-
-      # merchant_cc_details:
-      #   type: string
-      #   description:
-
+      is_addon:
+        type: boolean
+        description: is this item an addon (an optional item) selected by the guest
+      discount_amount:
+        type: string
+        description: discount amount (either entered directly or calculated from `discount_percent`)
+      discount_percent:
+        type: string
+        description: discount percentage
+      subtotal:
+        type: string
+        description: total after applying discount, before applying taxes
+      tax_1_info:
+        type: string
+        description: first tax description
+      tax_1_amount:
+        type: string
+        description: first tax amount
+      tax_2_info:
+        type: string
+        description: second tax description
+      tax_2_amount:
+        type: string
+        description: second tax amount
+      grand_total:
+        type: string
+        description: total after applying discount and taxes
 
   Error:
     type: object
