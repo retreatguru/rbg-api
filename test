@@ -1,0 +1,14 @@
+#!/bin/sh
+
+export RGDOMAIN=dev.programs.dev
+export RGTOKEN=0000
+
+echo Testing programs...
+php examples/php/programs.php > php.result
+python3 examples/python3/programs.py > python.result
+diff php.result python.result
+
+echo Testing pages...
+php examples/php/pages.php > php.result
+python3 examples/python3/pages.py > python.result
+diff php.result python.result
