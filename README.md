@@ -12,7 +12,7 @@ and everything in between.
 The first thing you'll need is the security token for your installation. Go to the Reg. Settings
 on your install, select the API tab and grab the token that appears there.
 
-![](resource/token.png "Where is my token?")
+![](img/token.png "Where is my token?")
 
 If there isn't a token there yet, hit *Generate Token*, then *Save changes* and then copy the token.
 
