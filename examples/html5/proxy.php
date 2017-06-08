@@ -1,14 +1,12 @@
 <?php
 
-// This script redirects all calls to itself to the API server configured
-// in the RGDOMAIN and RGTOKEN environment variables.
-// 
-// To run it locally, use:
-// 
-// $ php -S localhost:8080 proxy.php
+if (! getenv('RGDOMAIN')) {
+    echo "error: environment variables RGDOMAIN and RGTOKEN not set\n";
+    exit(1);
+}
 
+// if process the request if it starts with /api/ otherwise serve the file directly
 if (! preg_match('#^/api/#', $_SERVER["REQUEST_URI"])) {
-    // if path doesn't start with /api/, serve the file directly
     return false;
 }
 
@@ -30,4 +28,14 @@ $query = http_build_query($query);
 $url = "http://$domain$parsed[path]?$query";
 
 // call the API and return the result
-echo file_get_contents($url);
+$data = file_get_contents($url);
+
+// remove tokens from all the URLs in the result
+$data = preg_replace("/[&?]token=$token/", '', $data);
+$data = str_replace($token, '', $data);
+
+// replace all URLs with proxy path
+$data = str_replace("$domain/api", "$_SERVER[HTTP_HOST]/api", $data);
+
+// send result back to client
+echo $data;
