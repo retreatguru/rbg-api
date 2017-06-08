@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking Guru API Sample</title>
+</head>
+
+<body style="display:none">
+    <div>
+        <h1>Booking Guru API Sample</h1>
+        <h2>Program List</h2>
+        <ul class="program-list">
+        </ul>
+    </div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>    
+    // load program list through proxy
+    $.get('/api/v1/programs', function(data) {
+
+        // parse data
+        data = JSON.parse(data);
+
+        // add an <li> for each program in the result
+        $.each(data, function(index, program) {
+            $('ul.program-list').append($('<li>').html(
+                '<strong>'+program.name+'</strong>'+' (from '+program.start_date+' to '+program.end_date+')'
+            ));
+        });
+
+        // content is loaded, now show the HTML body
+        $('body').show();
+    });
+</script>
+
+</html>
