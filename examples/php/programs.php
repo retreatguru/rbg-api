@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 
 // This script lists all the programs available for a retreat center.

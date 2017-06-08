@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-#
 # This script lists all the programs available for a retreat center.
 # 
 # To run it you need to have the RGDOMAIN and RGTOKEN environment variables
