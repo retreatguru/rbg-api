@@ -4,6 +4,11 @@
 $domain = getenv('RGDOMAIN');
 $token = getenv('RGTOKEN');
 
+if (! ($domain || $token)) {
+    echo "error: please set RGDOMAIN and RGTOKEN\n";
+    exit(1);
+}
+
 # get all the registrations
 $page = 1;
 while (true) {

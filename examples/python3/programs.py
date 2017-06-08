@@ -1,10 +1,15 @@
 import os
+import sys
 import json
 from urllib import request
 
 # get the environment variables
 domain = os.getenv('RGDOMAIN')
 token = os.getenv('RGTOKEN')
+
+if (not (domain and token)):
+    print("error: please set RGDOMAIN and RGTOKEN")
+    sys.exit(1)
 
 # create the url to access the data on the API
 url = 'http://{domain}/api/v1/programs?token={token}'.format(domain=domain, token=token)
