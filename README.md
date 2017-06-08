@@ -64,6 +64,7 @@ Following is the reference for the requests you can currently do against the API
 *Notes:*
 
 1. All values with the `date` type are in `YYYY-MM-DD` format, all values with the `date-time` type are in the `YYYY-MM-DDTHH:MM:SS` format.
+   The special value `today` can also be used with any date argument.
 
 2. If a parameters can take multiple values (the `id` parameter usually does) provide multiple values separated by commas without spaces.
 
@@ -235,27 +236,18 @@ Filter transactions by category. Categories are user defined and can be very spe
 ### GET /payments
 **Get payment transaction info**
 
-Payments
+Payment transactions can be credit card transactions entered automatically through the Booking Guru
+registration system and entires done manually through the admin interface. Refunds are also represented
+here Every payment is also available through the `/transactions` endpoint, but objects received through
+this endpoint are filtered for easier use and contain more details that are only relevant for payments.
+
+The `/payments` endpoint accepts the same arguments as the `/transactions` endpoint.
 
 #### Parameters
 
 ***token: string (required)***
 
 Security token
-
-***id: [integer]***
-
-Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
-
-***limit: integer***
-
-Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
-limits, but please use this with caution to not overload our servers.
-
-***page: integer***
-
-Get further pages of results. By default the first `limit` results is returned, to get further results
-pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
 #### Responses
 
@@ -269,27 +261,18 @@ pass higher values to `page`. When a page is higher than available data the requ
 ### GET /items
 **Get item transaction info**
 
-Items
+Item transactions represent anything purchased by a guest and any discount they received. This
+includes payment for programs, lodging, meals and any optional items that were set up. Every item 
+transaction is also available through the `/transactions` endpoint, but objects received here
+are filtered for easier use and contain more details that are only relevant for items.
+
+The `/items` endpoint accepts the same arguments as the `/transactions` endpoint.
 
 #### Parameters
 
 ***token: string (required)***
 
 Security token
-
-***id: [integer]***
-
-Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
-
-***limit: integer***
-
-Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
-limits, but please use this with caution to not overload our servers.
-
-***page: integer***
-
-Get further pages of results. By default the first `limit` results is returned, to get further results
-pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
 #### Responses
 

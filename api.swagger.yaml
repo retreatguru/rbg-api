@@ -66,6 +66,7 @@ info:
     *Notes:*
 
     1. All values with the `date` type are in `YYYY-MM-DD` format, all values with the `date-time` type are in the `YYYY-MM-DDTHH:MM:SS` format.
+       The special value `today` can also be used with any date argument.
 
     2. If a parameters can take multiple values (the `id` parameter usually does) provide multiple values separated by commas without spaces.
 
@@ -250,14 +251,17 @@ paths:
 
   /payments:
     get:
-      summary: Get payment transaction info
+      summary: Get payment transaction info 
       description: |
-        Payments
+        Payment transactions can be credit card transactions entered automatically through the Booking Guru
+        registration system and entires done manually through the admin interface. Refunds are also represented
+        here Every payment is also available through the `/transactions` endpoint, but objects received through
+        this endpoint are filtered for easier use and contain more details that are only relevant for payments.
+
+        The `/payments` endpoint accepts the same arguments as the `/transactions` endpoint.
+
       parameters:
         - $ref: '#/parameters/token'
-        - $ref: '#/parameters/id'
-        - $ref: '#/parameters/limit'
-        - $ref: '#/parameters/page'
 
       responses:
         200:
@@ -277,13 +281,15 @@ paths:
     get:
       summary: Get item transaction info
       description: |
-        Items
+        Item transactions represent anything purchased by a guest and any discount they received. This
+        includes payment for programs, lodging, meals and any optional items that were set up. Every item 
+        transaction is also available through the `/transactions` endpoint, but objects received here
+        are filtered for easier use and contain more details that are only relevant for items.
+
+        The `/items` endpoint accepts the same arguments as the `/transactions` endpoint.
+
       parameters:
         - $ref: '#/parameters/token'
-        - $ref: '#/parameters/id'
-        - $ref: '#/parameters/limit'
-        - $ref: '#/parameters/page'
-        
 
       responses:
         200:
