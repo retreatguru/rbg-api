@@ -21,8 +21,8 @@ info:
     Set a couple of environment variables so it's easier to run the samples:
 
     ```
-    $ export BGDOMAIN=<domain>
-    $ export BGTOKEN=<token>
+    $ export RGDOMAIN=<domain>
+    $ export RGTOKEN=<token>
     ```
 
     The `<domain>` is your install's domain, and `<token>` is the token you just got from the admin UI.
@@ -31,33 +31,27 @@ info:
 
     ## Curl examples
 
-    Get latest 20 programs:
+    Get programs:
 
     ```
-    $ curl "https://$BGDOMAIN/api/v1/programs?token=$BGTOKEN"
+    $ curl "https://$RGDOMAIN/api/v1/programs?token=$RGTOKEN"
     ```
 
-    Get latest 20 registrations:
+    Get registations:
 
     ```
-    $ curl "https://$BGDOMAIN/api/v1/registrations?token=$BGTOKEN"
+    $ curl "https://$RGDOMAIN/api/v1/registrations?token=$RGTOKEN"
     ```
 
-    Get all registrations (*dont' do this too often if you have a large install*):
+    Get transactions:
 
     ```
-    $ curl "https://$BGDOMAIN/api/v1/registrations?token=$BGTOKEN&limit=0"
+    $ curl "https://$RGDOMAIN/api/v1/transactions?token=$RGTOKEN"
     ```
 
-    Get all registrations for a particular program:
+    ## More examples
 
-    ```
-    $ curl "https://$BGDOMAIN/api/v1/registrations?token=$BGTOKEN&program_slug=3-day-escape"
-    ```
-
-    ## Examples
-
-    We're working on some deeper examples in PHP, Python and Javascript that we'll push to this repo real soon.
+    More examples in different programming languages are available in [examples/](https://github.com/retreatguru/rbg-api/tree/master/examples).
 
     ## API Reference
 
@@ -68,7 +62,7 @@ info:
     1. All values with the `date` type are in `YYYY-MM-DD` format, all values with the `date-time` type are in the `YYYY-MM-DDTHH:MM:SS` format.
        The special value `today` can also be used with any date argument.
 
-    2. If a parameters can take multiple values (the `id` parameter usually does) provide multiple values separated by commas without spaces.
+    2. If a parameters can take multiple values (the `id` parameter usually does), provide multiple values separated by commas without spaces.
 
 # -------------------------------------------------------------------------------------------------
 

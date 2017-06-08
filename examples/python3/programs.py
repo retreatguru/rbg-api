@@ -1,8 +1,3 @@
-# This script lists all the programs available for a retreat center.
-# 
-# To run it you need to have the RGDOMAIN and RGTOKEN environment variables
-# properly configured sa explained in the README.md file.
-
 import os
 import json
 from urllib import request
