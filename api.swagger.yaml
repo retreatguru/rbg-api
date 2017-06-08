@@ -83,6 +83,14 @@ paths:
         - $ref: '#/parameters/limit'
         - $ref: '#/parameters/page'
 
+        - name: category
+          in: query
+          type: array
+          items:
+            type: string
+          description: |
+            Gets all the programs that belong to this category or categories.
+
       responses:
         200:
           description:
@@ -374,6 +382,11 @@ definitions:
         items:
           type: string
         description: teacher names for the program
+      categories:
+        type: array
+        items:
+          type: string
+        description: categories the program belongs to
 
   Registration:
     type: object

@@ -89,6 +89,10 @@ limits, but please use this with caution to not overload our servers.
 Get further pages of results. By default the first `limit` results is returned, to get further results
 pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
+***category: [string]***
+
+Gets all the programs that belong to this category or categories.
+
 #### Responses
 
 | Code | Description | Schema |
@@ -295,6 +299,7 @@ A single program
 | payments_url | string | API URL for program payments |
 | items_url | string | API URL for program items |
 | teachers | [string] | teacher names for the program |
+| categories | [string] | categories the program belongs to |
 
 ### Registration
 
