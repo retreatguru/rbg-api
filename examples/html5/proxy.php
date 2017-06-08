@@ -6,7 +6,7 @@ if (! getenv('RGDOMAIN')) {
 }
 
 // if process the request if it starts with /api/ otherwise serve the file directly
-if (! preg_match('#^/api/#', $_SERVER["REQUEST_URI"])) {
+if (! preg_match('#^/api/|$#', $_SERVER["REQUEST_URI"])) {
     return false;
 }
 
@@ -34,7 +34,7 @@ $data = file_get_contents($url);
 $data = preg_replace("/[&?]token=$token/", '', $data);
 $data = str_replace($token, '', $data);
 
-// replace all URLs with proxy path
+// point all API URLs to proxy
 $data = str_replace("$domain/api", "$_SERVER[HTTP_HOST]/api", $data);
 
 // send result back to client
