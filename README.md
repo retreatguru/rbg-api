@@ -292,12 +292,12 @@ A single program
 | id | integer | internal unique id |
 | self_url | url | API URL pointing back to the object |
 | name | string | program name |
-| start_date | string | program start date |
-| end_date | string | program end date |
-| registrations_url | string | API URL for program registrations |
-| transactions_url | string | API URL for all program transactions (includs payments and items) |
-| payments_url | string | API URL for program payments |
-| items_url | string | API URL for program items |
+| start_date | date | program start date |
+| end_date | date | program end date |
+| registrations_url | url | API URL for program registrations |
+| transactions_url | url | API URL for all program transactions (includs payments and items) |
+| payments_url | url | API URL for program payments |
+| items_url | url | API URL for program items |
 | teachers | [string] | teacher names for the program |
 | categories | [string] | categories the program belongs to |
 
@@ -344,7 +344,7 @@ A single transaction
 | Name | Type | Description |
 | ---- |----- | ----------- |
 | id | integer | internal unique id |
-| self_url | string | API URL pointing back to the object |
+| self_url | url | API URL pointing back to the object |
 | submitted | date-time | exact time when transaction was submitted |
 | trans_date | date-time | exact time of the transaction (can be modified manually, as opposed to `submitted`) |
 | class | string | coarce grained classification of transactions |
@@ -354,10 +354,10 @@ A single transaction
 | notes | string | notes entered about the transaction by the admin |
 | staff_name | string | username of staff member who entered the transaction (if manually entered in the admin interface) |
 | program_name | string | name of program for which this transaction was made |
-| program_url | string | API URL of program for which this transaction was made |
+| program_url | url | API URL of program for which this transaction was made |
 | person_name | string | name of person on the registration |
-| registration_url | string | API URL of connected registration object |
-| details_url | string | API URL of detailed payment or item object |
+| registration_url | url | API URL of connected registration object |
+| details_url | url | API URL of detailed payment or item object |
 | charge_amount | number | amount that was charged (usually used for purchased items) |
 | credit_amount | number | amount that was credited (usually used for payments made) |
 

@@ -361,21 +361,27 @@ definitions:
         description: program name
       start_date:
         type: string
+        format: date
         description: program start date
       end_date:
         type: string
+        format: date
         description: program end date
       registrations_url:
         type: string
+        format: url
         description: API URL for program registrations
       transactions_url:
         type: string
+        format: url
         description: API URL for all program transactions (includs payments and items)
       payments_url:
         type: string
+        format: url
         description: API URL for program payments
       items_url:
         type: string
+        format: url
         description: API URL for program items
       teachers:
         type: array
@@ -494,6 +500,7 @@ definitions:
 
       self_url:
         type: string
+        format: url
         description: API URL pointing back to the object
 
       submitted:
@@ -537,6 +544,7 @@ definitions:
 
       program_url:
         type: string
+        format: url
         description: API URL of program for which this transaction was made
 
       person_name:
@@ -545,10 +553,12 @@ definitions:
 
       registration_url:
         type: string
+        format: url
         description: API URL of connected registration object
 
       details_url:
         type: string
+        format: url
         description: API URL of detailed payment or item object
 
       charge_amount:
