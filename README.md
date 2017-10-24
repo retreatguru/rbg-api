@@ -300,6 +300,10 @@ A single program
 | items_url | url | API URL for program items |
 | teachers | [string] | teacher names for the program |
 | categories | [string] | categories the program belongs to |
+| external_code | string | custom program code for linking with other software (entered manually in admin interface) |
+| registrations_link | url | URL of public registration page for program |
+| program_link | url | URL of public program info page |
+| images | [array] | info about program images including urls and sizes |
 
 ### Registration
 

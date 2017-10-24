@@ -393,6 +393,22 @@ definitions:
         items:
           type: string
         description: categories the program belongs to
+      external_code:
+        type: string
+        description: custom program code for linking with other software (entered manually in admin interface)
+      registrations_link:
+        type: string
+        format: url
+        description: URL of public registration page for program
+      program_link:
+        type: string
+        format: url
+        description: URL of public program info page
+      images:
+        type: array
+        items:
+          type: array
+        description: info about program images including urls and sizes
 
   Registration:
     type: object
