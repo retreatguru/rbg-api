@@ -119,9 +119,11 @@ paths:
 
         - name: program_id
           in: query
-          type: integer
+          type: array
+          items:
+            type: integer
           description: |
-            Gets all the registrations for a specific program.
+            Filter registrations for a specific program or programs (for multiple programs supply a comma separated list of ids).
 
         - name: min_date
           in: query
@@ -202,9 +204,11 @@ paths:
 
         - name: program_id
           in: query
-          type: integer
+          type: array
+          items:
+            type: integer
           description: |
-            Filter transactions for a specific program.
+            Filter transactions for a specific program or programs (for multiple programs supply a comma separated list of ids).
 
         - name: registration_id
           in: query
@@ -301,6 +305,47 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Item'
+        400:
+          description: An error
+          schema:
+
+            $ref: '#/definitions/Error'
+
+  /leads:
+    get:
+      summary: Get leads info
+      description: |
+        Leads are created in two cases: (1) when a person enters a waiting list on a program that's fully booked and, 
+        (2) when the Advanced Registration Form is enabled and the user only enters their name and email in the Welcome
+        section. In the former case the lead type is 'abandoned-reg', in the latter it is 'wait-list'.
+
+      parameters:
+        - $ref: '#/parameters/token'
+        - $ref: '#/parameters/id'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/page'
+
+        - name: program_id
+          in: query
+          type: integer
+          description: |
+            Filter leads for a specific program or programs (for multiple programs supply a comma separated list of ids).
+
+        - name: lead_type
+          in: query
+          type: string
+          enum: [abandoned-reg, wait-list]
+          description: |
+            Filter transactions for a lead type.
+
+      responses:
+        200:
+          description:
+            An array of leads
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Lead'
         400:
           description: An error
           schema:
@@ -644,6 +689,63 @@ definitions:
       grand_total:
         type: string
         description: total after applying discount and taxes
+
+  Lead:
+    type: object
+    description: |
+      A single lead, either an abandoned registration or a waiting list entry.
+    properties:
+        submitted:
+          type: string
+          format: date-time
+          description: exact time when lead was submitted
+        lead_type:
+          type: string
+          enum: [abandoned-reg, wait-list]
+          description: type of lead
+        first_name:
+          type: string
+          description: guest's first name
+        last_name:
+          type: string
+          description: guest's last name
+        full_name:
+          type: string
+          description: guest's full name
+        email:
+          type: string
+          format: email
+          description: guest's email
+        program: 
+          type: string
+          description: name of program for which the guest attempted to register
+        program_id: 
+          type: integer
+          description: id for the program
+        program_url:
+          type: string
+          format: url
+          description: API URL for the program
+        program_categories: 
+          type: array
+          description: categories for the program
+        program_external_code: 
+          type: string
+          description: external code for the program (can be set up in the admin under Program / Advanced)
+        language: 
+          type: string
+          description: language code in which the registration was completed (i.e. en, fr, etc.)
+        program_link: 
+          type: string
+          format: url
+          description: link to program description page
+        registration_link:
+          type: string
+          format: url
+          description: link to registration page
+        questions: 
+          type: array
+          description: an array of answers to all custom questions
 
   Error:
     type: object

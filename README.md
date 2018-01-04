@@ -128,9 +128,9 @@ limits, but please use this with caution to not overload our servers.
 Get further pages of results. By default the first `limit` results is returned, to get further results
 pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
-***program_id: integer***
+***program_id: [integer]***
 
-Gets all the registrations for a specific program.
+Filter registrations for a specific program or programs (for multiple programs supply a comma separated list of ids).
 
 ***min_date: date***
 
@@ -202,9 +202,9 @@ Filter transactions by class. Classes are hard coded and segment transaction int
 * `person-credit` - personal credit was added for the guest
 * `person-debit` - personal credit was used for payment
 
-***program_id: integer***
+***program_id: [integer]***
 
-Filter transactions for a specific program.
+Filter transactions for a specific program or programs (for multiple programs supply a comma separated list of ids).
 
 ***registration_id: [integer]***
 
@@ -277,6 +277,50 @@ Security token
 | Code | Description | Schema |
 | ---- | ----------- | ------ |
 200 | An array of items | [ [Item](#item) ] 
+400 | An error | [Error](#error) 
+
+---
+
+### GET /leads
+**Get leads info**
+
+Leads are created in two cases: (1) when a person enters a waiting list on a program that's fully booked and, 
+(2) when the Advanced Registration Form is enabled and the user only enters their name and email in the Welcome
+section. In the former case the lead type is 'abandoned-reg', in the latter it is 'wait-list'.
+
+#### Parameters
+
+***token: string (required)***
+
+Security token
+
+***id: [integer]***
+
+Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
+
+***limit: integer***
+
+Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
+limits, but please use this with caution to not overload our servers.
+
+***page: integer***
+
+Get further pages of results. By default the first `limit` results is returned, to get further results
+pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
+
+***program_id: integer***
+
+Filter leads for a specific program or programs (for multiple programs supply a comma separated list of ids).
+
+***lead_type: string***
+
+Filter transactions for a lead type.
+
+#### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+200 | An array of leads | [ [Lead](#lead) ] 
 400 | An error | [Error](#error) 
 
 ## Models
@@ -399,6 +443,30 @@ fields that are only relevant for items purchased by the guest.
 | tax_2_info | string | second tax description |
 | tax_2_amount | string | second tax amount |
 | grand_total | string | total after applying discount and taxes |
+
+### Lead
+
+A single lead, either an abandoned registration or a waiting list entry.
+
+#### Properties
+
+| Name | Type | Description |
+| ---- |----- | ----------- |
+| submitted | date-time | exact time when lead was submitted |
+| lead_type | string | type of lead (abandoned-reg, wait-list) |
+| first_name | string | guest's first name |
+| last_name | string | guest's last name |
+| full_name | string | guest's full name |
+| email | email | guest's email |
+| program | string | name of program for which the guest attempted to register |
+| program_id | integer | id for the program |
+| program_url | url | API URL for the program |
+| program_categories | array | categories for the program |
+| program_external_code | string | external code for the program (can be set up in the admin under Program / Advanced) |
+| language | string | language code in which the registration was completed (i.e. en, fr, etc.) |
+| program_link | url | link to program description page |
+| registration_link | url | link to registration page |
+| questions | array | an array of answers to all custom questions |
 
 ### Error
 
