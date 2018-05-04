@@ -89,9 +89,32 @@ limits, but please use this with caution to not overload our servers.
 Get further pages of results. By default the first `limit` results is returned, to get further results
 pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
+***lang: string***
+
+Get the content for a particular language. The language values are two-letter identifiers from
+[ISO 639-1](https://www.loc.gov/standards/iso639-2/php/code_list.php).
+Only the languages that are enabled for your install will work. The default language is `en` (English).
+
 ***category: [string]***
 
 Gets all the programs that belong to this category or categories.
+
+***on_date: date***
+
+Gets all the programs that occur on this date (start on and before it and end on or after it).
+
+***min_date: date***
+
+Gets all the programs that start on or after this date.
+
+***max_date: date***
+
+Gets all the programs that end on or after this date.
+
+***include: [string]***
+
+Include additional data in the response. The only currently valid value is `teachers` to
+include full informations about the teachers for this program.
 
 #### Responses
 
@@ -102,10 +125,38 @@ Gets all the programs that belong to this category or categories.
 
 ---
 
+### GET /teachers
+**Get teacher info**
+
+Retrieves information about teachers and their descriptions.
+
+#### Parameters
+
+***token: string (required)***
+
+Security token
+
+***id: [integer]***
+
+Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
+
+***program_id: [integer]***
+
+Gets teachers for a specific program or programs (for multiple programs supply a comma separated list of ids).
+
+#### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+200 | An array of teachers | [ [Teacher](#teacher) ] 
+400 | An error | [Error](#error) 
+
+---
+
 ### GET /registrations
 **Get registration info**
 
-Retrieves registration details including names, emails and programs people have registered to. Registrations are always sorted 
+Retrieves registration details including names, emails and programs people have registered to. Registrations are always sorted
 in reverse chronological order with the newest registrations at the top or the result list.
 
 #### Parameters
@@ -127,6 +178,12 @@ limits, but please use this with caution to not overload our servers.
 
 Get further pages of results. By default the first `limit` results is returned, to get further results
 pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
+
+***lang: string***
+
+Get the content for a particular language. The language values are two-letter identifiers from
+[ISO 639-1](https://www.loc.gov/standards/iso639-2/php/code_list.php).
+Only the languages that are enabled for your install will work. The default language is `en` (English).
 
 ***program_id: [integer]***
 
@@ -151,6 +208,14 @@ and those that start after `min_stay`. This will not include registrations that 
 Gets all registrations for which the registration stay dates are on or before `max_stay`. In particular
 this includes registrations that those that start before `max_stay` and end on or after it,
 and those that start after `max_stay`. This will not include registrations that start after `max_stay`.
+
+***include: [string]***
+
+Include additional data in the response. The valid values are:
+
+- `payments` to include [Payment](#payment) objects
+- `items` to include [Item](#item) objects
+- `transactions` to include [Transaction](#transaction) objects (both items and payments)
 
 #### Responses
 
@@ -188,6 +253,12 @@ limits, but please use this with caution to not overload our servers.
 
 Get further pages of results. By default the first `limit` results is returned, to get further results
 pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
+
+***lang: string***
+
+Get the content for a particular language. The language values are two-letter identifiers from
+[ISO 639-1](https://www.loc.gov/standards/iso639-2/php/code_list.php).
+Only the languages that are enabled for your install will work. The default language is `en` (English).
 
 ***class: [string]***
 
@@ -260,7 +331,7 @@ Security token
 **Get item transaction info**
 
 Item transactions represent anything purchased by a guest and any discount they received. This
-includes payment for programs, lodging, meals and any optional items that were set up. Every item 
+includes payment for programs, lodging, meals and any optional items that were set up. Every item
 transaction is also available through the `/transactions` endpoint, but objects received here
 are filtered for easier use and contain more details that are only relevant for items.
 
@@ -284,7 +355,7 @@ Security token
 ### GET /leads
 **Get leads info**
 
-Leads are created in two cases: (1) when a person enters a waiting list on a program that's fully booked and, 
+Leads are created in two cases: (1) when a person enters a waiting list on a program that's fully booked and,
 (2) when the Advanced Registration Form is enabled and the user only enters their name and email in the Welcome
 section. In the former case the lead type is 'abandoned-reg', in the latter it is 'wait-list'.
 
@@ -307,6 +378,12 @@ limits, but please use this with caution to not overload our servers.
 
 Get further pages of results. By default the first `limit` results is returned, to get further results
 pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
+
+***lang: string***
+
+Get the content for a particular language. The language values are two-letter identifiers from
+[ISO 639-1](https://www.loc.gov/standards/iso639-2/php/code_list.php).
+Only the languages that are enabled for your install will work. The default language is `en` (English).
 
 ***program_id: integer***
 
@@ -336,6 +413,7 @@ A single program
 | id | integer | internal unique id |
 | self_url | url | API URL pointing back to the object |
 | name | string | program name |
+| content | string | program description |
 | start_date | date | program start date |
 | end_date | date | program end date |
 | registrations_url | url | API URL for program registrations |
@@ -348,6 +426,19 @@ A single program
 | registrations_link | url | URL of public registration page for program |
 | program_link | url | URL of public program info page |
 | images | [array] | info about program images including urls and sizes |
+
+### Teacher
+
+A single teacher
+
+#### Properties
+
+| Name | Type | Description |
+| ---- |----- | ----------- |
+| id | integer | internal unique id |
+| self_url | url | API URL pointing back to the object |
+| name | string | teacher name |
+| content | string | teacher description |
 
 ### Registration
 
