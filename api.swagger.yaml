@@ -119,8 +119,9 @@ paths:
           items:
             type: string
           description: |
-            Include additional data in the response. The only currently valid value is `teachers` to
-            include full informations about the teachers for this program.
+            Include additional data in the response. The valid values are:
+
+            - `teachers` to include [Teacher](#teacher) objects
 
       responses:
         200:

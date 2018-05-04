@@ -113,8 +113,9 @@ Gets all the programs that end on or after this date.
 
 ***include: [string]***
 
-Include additional data in the response. The only currently valid value is `teachers` to
-include full informations about the teachers for this program.
+Include additional data in the response. The valid values are:
+
+- `teachers` to include [Teacher](#teacher) objects
 
 #### Responses
 
