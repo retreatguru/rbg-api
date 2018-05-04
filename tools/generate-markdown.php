@@ -102,7 +102,7 @@ function generate_markdown($spec) {
                 }
                 $required = (isset($parameter->required) ? ' (required)' : '');
                 $type = _parse_type($parameter);
-                echo "***$parameter->name: $type$required***\n\n";
+                echo "***`$parameter->name: $type$required`***\n\n";
                 echo trim($parameter->description)."\n\n";
             }
 

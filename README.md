@@ -71,47 +71,47 @@ Retrieves information about programs, their dates and and categories.
 
 #### Parameters
 
-***token: string (required)***
+***`token: string (required)`***
 
 Security token
 
-***id: [integer]***
+***`id: [integer]`***
 
 Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
 
-***limit: integer***
+***`limit: integer`***
 
 Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
 limits, but please use this with caution to not overload our servers.
 
-***page: integer***
+***`page: integer`***
 
 Get further pages of results. By default the first `limit` results is returned, to get further results
 pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
-***lang: string***
+***`lang: string`***
 
 Get the content for a particular language. The language values are two-letter identifiers from
 [ISO 639-1](https://www.loc.gov/standards/iso639-2/php/code_list.php).
 Only the languages that are enabled for your install will work. The default language is `en` (English).
 
-***category: [string]***
+***`category: [string]`***
 
-Gets all the programs that belong to this category or categories.
+Get all the programs that belong to this category or categories.
 
-***on_date: date***
+***`on_date: date`***
 
-Gets all the programs that occur on this date (start on and before it and end on or after it).
+Get all the programs that occur on this date (start on and before it and end on or after it).
 
-***min_date: date***
+***`min_date: date`***
 
-Gets all the programs that start on or after this date.
+Get all the programs that start on or after this date.
 
-***max_date: date***
+***`max_date: date`***
 
-Gets all the programs that end on or after this date.
+Get all the programs that end on or after this date.
 
-***include: [string]***
+***`include: [string]`***
 
 Include additional data in the response. The valid values are:
 
@@ -133,17 +133,17 @@ Retrieves information about teachers and their descriptions.
 
 #### Parameters
 
-***token: string (required)***
+***`token: string (required)`***
 
 Security token
 
-***id: [integer]***
+***`id: [integer]`***
 
 Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
 
-***program_id: [integer]***
+***`program_id: [integer]`***
 
-Gets teachers for a specific program or programs (for multiple programs supply a comma separated list of ids).
+Get teachers for a specific program or programs (for multiple programs supply a comma separated list of ids).
 
 #### Responses
 
@@ -162,55 +162,55 @@ in reverse chronological order with the newest registrations at the top or the r
 
 #### Parameters
 
-***token: string (required)***
+***`token: string (required)`***
 
 Security token
 
-***id: [integer]***
+***`id: [integer]`***
 
 Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
 
-***limit: integer***
+***`limit: integer`***
 
 Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
 limits, but please use this with caution to not overload our servers.
 
-***page: integer***
+***`page: integer`***
 
 Get further pages of results. By default the first `limit` results is returned, to get further results
 pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
-***lang: string***
+***`lang: string`***
 
 Get the content for a particular language. The language values are two-letter identifiers from
 [ISO 639-1](https://www.loc.gov/standards/iso639-2/php/code_list.php).
 Only the languages that are enabled for your install will work. The default language is `en` (English).
 
-***program_id: [integer]***
+***`program_id: [integer]`***
 
 Filter registrations for a specific program or programs (for multiple programs supply a comma separated list of ids).
 
-***min_date: date***
+***`min_date: date`***
 
-Gets registrations that were submitted on or after `min_date`. Can be combined with `max_date` for a range of dates.
+Get registrations that were submitted on or after `min_date`. Can be combined with `max_date` for a range of dates.
 
-***max_date: date***
+***`max_date: date`***
 
-Gets registrations that were submitted on or before `max_date`.
+Get registrations that were submitted on or before `max_date`.
 
-***min_stay: date***
+***`min_stay: date`***
 
-Gets all registrations for which the registration stay dates are on or after `min_stay`. In particular
+Get all registrations for which the registration stay dates are on or after `min_stay`. In particular
 this includes registrations that start on `min_stay`, those that start before `min_stay` and end on or after it,
 and those that start after `min_stay`. This will not include registrations that end before `min_stay`.
 
-***max_stay: date***
+***`max_stay: date`***
 
-Gets all registrations for which the registration stay dates are on or before `max_stay`. In particular
+Get all registrations for which the registration stay dates are on or before `max_stay`. In particular
 this includes registrations that those that start before `max_stay` and end on or after it,
 and those that start after `max_stay`. This will not include registrations that start after `max_stay`.
 
-***include: [string]***
+***`include: [string]`***
 
 Include additional data in the response. The valid values are:
 
@@ -237,31 +237,31 @@ Transactions are always sorted in reverse chronological order with the newest tr
 
 #### Parameters
 
-***token: string (required)***
+***`token: string (required)`***
 
 Security token
 
-***id: [integer]***
+***`id: [integer]`***
 
 Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
 
-***limit: integer***
+***`limit: integer`***
 
 Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
 limits, but please use this with caution to not overload our servers.
 
-***page: integer***
+***`page: integer`***
 
 Get further pages of results. By default the first `limit` results is returned, to get further results
 pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
-***lang: string***
+***`lang: string`***
 
 Get the content for a particular language. The language values are two-letter identifiers from
 [ISO 639-1](https://www.loc.gov/standards/iso639-2/php/code_list.php).
 Only the languages that are enabled for your install will work. The default language is `en` (English).
 
-***class: [string]***
+***`class: [string]`***
 
 Filter transactions by class. Classes are hard coded and segment transaction into 8 broad categories:
 
@@ -274,23 +274,23 @@ Filter transactions by class. Classes are hard coded and segment transaction int
 * `person-credit` - personal credit was added for the guest
 * `person-debit` - personal credit was used for payment
 
-***program_id: [integer]***
+***`program_id: [integer]`***
 
 Filter transactions for a specific program or programs (for multiple programs supply a comma separated list of ids).
 
-***registration_id: [integer]***
+***`registration_id: [integer]`***
 
 Filter transactions for a specific registration or registrations.
 
-***min_date: date***
+***`min_date: date`***
 
 Filter transactions that were submitted on or after this date.
 
-***max_date: date***
+***`max_date: date`***
 
 Filter transactions that were submitted on or before this date.
 
-***category: [string]***
+***`category: [string]`***
 
 Filter transactions by category. Categories are user defined and can be very specific.
 
@@ -315,7 +315,7 @@ The `/payments` endpoint accepts the same arguments as the `/transactions` endpo
 
 #### Parameters
 
-***token: string (required)***
+***`token: string (required)`***
 
 Security token
 
@@ -340,7 +340,7 @@ The `/items` endpoint accepts the same arguments as the `/transactions` endpoint
 
 #### Parameters
 
-***token: string (required)***
+***`token: string (required)`***
 
 Security token
 
@@ -362,35 +362,35 @@ section. In the former case the lead type is 'abandoned-reg', in the latter it i
 
 #### Parameters
 
-***token: string (required)***
+***`token: string (required)`***
 
 Security token
 
-***id: [integer]***
+***`id: [integer]`***
 
 Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
 
-***limit: integer***
+***`limit: integer`***
 
 Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
 limits, but please use this with caution to not overload our servers.
 
-***page: integer***
+***`page: integer`***
 
 Get further pages of results. By default the first `limit` results is returned, to get further results
 pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
 
-***lang: string***
+***`lang: string`***
 
 Get the content for a particular language. The language values are two-letter identifiers from
 [ISO 639-1](https://www.loc.gov/standards/iso639-2/php/code_list.php).
 Only the languages that are enabled for your install will work. The default language is `en` (English).
 
-***program_id: integer***
+***`program_id: integer`***
 
 Filter leads for a specific program or programs (for multiple programs supply a comma separated list of ids).
 
-***lead_type: string***
+***`lead_type: string`***
 
 Filter transactions for a lead type.
 

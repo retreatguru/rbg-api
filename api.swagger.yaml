@@ -90,28 +90,28 @@ paths:
           items:
             type: string
           description: |
-            Gets all the programs that belong to this category or categories.
+            Get all the programs that belong to this category or categories.
 
         - name: on_date
           in: query
           type: string
           format: date
           description: |
-            Gets all the programs that occur on this date (start on and before it and end on or after it).
+            Get all the programs that occur on this date (start on and before it and end on or after it).
 
         - name: min_date
           in: query
           type: string
           format: date
           description: |
-            Gets all the programs that start on or after this date.
+            Get all the programs that start on or after this date.
 
         - name: max_date
           in: query
           type: string
           format: date
           description: |
-            Gets all the programs that end on or after this date.
+            Get all the programs that end on or after this date.
 
         - name: include
           in: query
@@ -152,7 +152,7 @@ paths:
           items:
             type: integer
           description: |
-            Gets teachers for a specific program or programs (for multiple programs supply a comma separated list of ids).
+            Get teachers for a specific program or programs (for multiple programs supply a comma separated list of ids).
 
       responses:
         200:
@@ -194,21 +194,21 @@ paths:
           type: string
           format: date
           description: |
-            Gets registrations that were submitted on or after `min_date`. Can be combined with `max_date` for a range of dates.
+            Get registrations that were submitted on or after `min_date`. Can be combined with `max_date` for a range of dates.
 
         - name: max_date
           in: query
           type: string
           format: date
           description: |
-            Gets registrations that were submitted on or before `max_date`.
+            Get registrations that were submitted on or before `max_date`.
 
         - name: min_stay
           in: query
           type: string
           format: date
           description: |
-            Gets all registrations for which the registration stay dates are on or after `min_stay`. In particular
+            Get all registrations for which the registration stay dates are on or after `min_stay`. In particular
             this includes registrations that start on `min_stay`, those that start before `min_stay` and end on or after it,
             and those that start after `min_stay`. This will not include registrations that end before `min_stay`.
 
@@ -217,7 +217,7 @@ paths:
           type: string
           format: date
           description: |
-            Gets all registrations for which the registration stay dates are on or before `max_stay`. In particular
+            Get all registrations for which the registration stay dates are on or before `max_stay`. In particular
             this includes registrations that those that start before `max_stay` and end on or after it,
             and those that start after `max_stay`. This will not include registrations that start after `max_stay`.
 
