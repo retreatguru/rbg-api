@@ -113,6 +113,12 @@ paths:
           description: |
             Get all the programs that end on or after this date.
 
+        - name: teacher_id
+          in: query
+          type: integer
+          description: |
+            Get all the programs for the teacher
+
         - name: include
           in: query
           type: array
@@ -145,6 +151,9 @@ paths:
       parameters:
         - $ref: '#/parameters/token'
         - $ref: '#/parameters/id'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/page'
+        - $ref: '#/parameters/lang'
 
         - name: program_id
           in: query
@@ -561,6 +570,15 @@ definitions:
       content:
         type: string
         description: teacher description
+      programs_url:
+        type: string
+        format: url
+        description: API URL for the teacher's programs
+      images:
+        type: array
+        items:
+          type: array
+        description: info about teacher images including urls and sizes
 
   Registration:
     type: object

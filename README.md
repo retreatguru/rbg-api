@@ -111,6 +111,10 @@ Get all the programs that start on or after this date.
 
 Get all the programs that end on or after this date.
 
+***`teacher_id: integer`***
+
+Get all the programs for the teacher
+
 ***`include: [string]`***
 
 Include additional data in the response. The valid values are:
@@ -140,6 +144,22 @@ Security token
 ***`id: [integer]`***
 
 Get programs with a specific id or list of ids. To get multiple objects, provide a comma separated list of values.
+
+***`limit: integer`***
+
+Limit number of return values. The default limit is 20. Pass `limit=0` To get all the objects without
+limits, but please use this with caution to not overload our servers.
+
+***`page: integer`***
+
+Get further pages of results. By default the first `limit` results is returned, to get further results
+pass higher values to `page`. When a page is higher than available data the request will return an empty JSON array.
+
+***`lang: string`***
+
+Get the content for a particular language. The language values are two-letter identifiers from
+[ISO 639-1](https://www.loc.gov/standards/iso639-2/php/code_list.php).
+Only the languages that are enabled for your install will work. The default language is `en` (English).
 
 ***`program_id: [integer]`***
 
@@ -440,6 +460,8 @@ A single teacher
 | self_url | url | API URL pointing back to the object |
 | name | string | teacher name |
 | content | string | teacher description |
+| programs_url | url | API URL for the teacher's programs |
+| images | [array] | info about teacher images including urls and sizes |
 
 ### Registration
 
