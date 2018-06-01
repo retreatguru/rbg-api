@@ -119,6 +119,12 @@ paths:
           description: |
             Get all the programs for the teacher
 
+        - name: public
+          in: query
+          type: boolean
+          description: |
+            Get all the programs that are listed publicly (controlled by the "Remove from public listings" setting for a program)
+
         - name: include
           in: query
           type: array
@@ -510,6 +516,9 @@ definitions:
         type: string
         format: date
         description: program end date
+      public:
+        type: boolean
+        description: is the programs listed publicly (controlled by the "Remove from public listings" setting for a program)
       registrations_url:
         type: string
         format: url

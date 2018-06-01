@@ -115,6 +115,10 @@ Get all the programs that end on or after this date.
 
 Get all the programs for the teacher
 
+***`public: boolean`***
+
+Get all the programs that are listed publicly (controlled by the "Remove from public listings" setting for a program)
+
 ***`include: [string]`***
 
 Include additional data in the response. The valid values are:
@@ -437,6 +441,7 @@ A single program
 | content | string | program description |
 | start_date | date | program start date |
 | end_date | date | program end date |
+| public | boolean | is the programs listed publicly (controlled by the "Remove from public listings" setting for a program) |
 | registrations_url | url | API URL for program registrations |
 | transactions_url | url | API URL for all program transactions (includs payments and items) |
 | payments_url | url | API URL for program payments |
