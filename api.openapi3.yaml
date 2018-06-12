@@ -1,0 +1,977 @@
+openapi: 3.0.0
+
+servers:
+  - url: /api/v1
+
+info:
+  title: Booking Guru API
+  version: v1
+  description: |
+    Welcome to the Booking Guru API, we're glad you could make it. Let's poke
+    around a bit.
+
+    And just in case you have no idea where you are, [Booking
+    Guru](http://bookingsoftware.guru)
+
+    is a software package for spiritual retreat centers to manage programs,
+    registrations, finances and everything in between.
+
+    **Security token**
+
+    The first thing you'll need is the security token for your installation. Go
+    to the Reg. Settings
+
+    on your install, select the API tab and grab the token that appears there.
+
+
+    If there isn't a token there yet, hit *Generate Token*, then *Save changes*
+    and then copy the token.
+
+    Set a couple of environment variables so it's easier to run the samples:
+
+    ```
+    $ export RGDOMAIN=<domain>
+    $ export RGTOKEN=<token>
+    ```
+
+    The `<domain>` is your install's domain, and `<token>` is the token you just
+    got from the admin UI.
+
+    Lets take a look at some data.
+
+    **Curl examples**
+
+    Get programs:
+
+    ```
+    $ curl "https://$RGDOMAIN/api/v1/programs?token=$RGTOKEN"
+    ```
+
+    Get registations:
+
+    ```
+    $ curl "https://$RGDOMAIN/api/v1/registrations?token=$RGTOKEN"
+    ```
+
+
+    Get transactions:
+
+    ```
+    $ curl "https://$RGDOMAIN/api/v1/transactions?token=$RGTOKEN"
+    ```
+
+    **More examples**
+
+    More examples in different programming languages are available at
+    https://github.com/retreatguru/rbg-api/tree/master/examples.
+
+    *Notes*
+
+    1. All values with the `date` type are in `YYYY-MM-DD` format, all values
+    with the `date-time` type are in the `YYYY-MM-DDTHH:MM:SS` format.
+       The special value `today` can also be used with any date argument.
+
+    2. If a parameters can take multiple values (the `id` parameter usually
+    does), provide multiple values separated by commas without spaces.
+
+paths:
+  /programs:
+    get:
+      summary: Get program info
+      description: |
+        Retrieves information about programs, their dates and and categories.
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/lang'
+        - name: category
+          in: query
+          description: |
+            Get all the programs that belong to this category or categories.
+          schema:
+            type: array
+            items:
+              type: string
+        - name: on_date
+          in: query
+          description: |
+            Get all the programs that occur on this date (start on and before it
+            and end on or after it).
+          schema:
+            type: string
+            format: date
+        - name: min_date
+          in: query
+          description: |
+            Get all the programs that start on or after this date.
+          schema:
+            type: string
+            format: date
+        - name: max_date
+          in: query
+          description: |
+            Get all the programs that end on or after this date.
+          schema:
+            type: string
+            format: date
+        - name: teacher_id
+          in: query
+          description: |
+            Get all the programs for the teacher
+          schema:
+            type: integer
+        - name: public
+          in: query
+          description: |
+            Get all the programs that are listed publicly (controlled by the
+            "Remove from public listings" setting for a program)
+          schema:
+            type: boolean
+        - name: include
+          in: query
+          description: |
+            Include additional data in the response. The valid values are:
+
+            - `teachers` to include [Teacher](#teacher) objects
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: An array of programs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Program'
+        '400':
+          description: An error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /teachers:
+    get:
+      summary: Get teacher info
+      description: |
+        Retrieves information about teachers and their descriptions.
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/lang'
+        - name: program_id
+          in: query
+          description: |
+            Get teachers for a specific program or programs (for multiple
+            programs supply a comma separated list of ids).
+          schema:
+            type: array
+            items:
+              type: integer
+      responses:
+        '200':
+          description: An array of teachers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Teacher'
+        '400':
+          description: An error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /registrations:
+    get:
+      summary: Get registration info
+      description: |
+        Retrieves registration details including names, emails and programs
+        people have registered to. Registrations are always sorted
+
+        in reverse chronological order with the newest registrations at the top
+        or the result list.
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/lang'
+        - name: program_id
+          in: query
+          description: |
+            Filter registrations for a specific program or programs (for
+            multiple programs supply a comma separated list of ids).
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: min_date
+          in: query
+          description: |
+            Get registrations that were submitted on or after `min_date`. Can be
+            combined with `max_date` for a range of dates.
+          schema:
+            type: string
+            format: date
+        - name: max_date
+          in: query
+          description: |
+            Get registrations that were submitted on or before `max_date`.
+          schema:
+            type: string
+            format: date
+        - name: min_stay
+          in: query
+          description: |
+            Get all registrations for which the registration stay dates are on
+            or after `min_stay`. In particular
+
+            this includes registrations that start on `min_stay`, those that
+            start before `min_stay` and end on or after it,
+
+            and those that start after `min_stay`. This will not include
+            registrations that end before `min_stay`.
+          schema:
+            type: string
+            format: date
+        - name: max_stay
+          in: query
+          description: |
+            Get all registrations for which the registration stay dates are on
+            or before `max_stay`. In particular
+
+            this includes registrations that those that start before `max_stay`
+            and end on or after it,
+
+            and those that start after `max_stay`. This will not include
+            registrations that start after `max_stay`.
+          schema:
+            type: string
+            format: date
+        - name: include
+          in: query
+          description: |
+            Include additional data in the response. The valid values are:
+
+
+            - `payments` to include [Payment](#payment) objects
+
+            - `items` to include [Item](#item) objects
+
+            - `transactions` to include [Transaction](#transaction) objects
+            (both items and payments)
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: An array of registrations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Registration'
+        '400':
+          description: An error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /transactions:
+    get:
+      summary: Get transaction info
+      description: |
+        Transactions represent the financial details of the registration,
+        including items the guest has purchased, discounts, taxes,
+
+        credit card payments, cash payments and any other custom transaction
+        type you may have defined on your install.
+
+
+        Transactions are always sorted in reverse chronological order with the
+        newest transaction at the top or the result list.
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/lang'
+        - name: class
+          in: query
+          description: |
+            Filter transactions by class. Classes are hard coded and segment
+            transaction into 8 broad categories:
+
+
+            * `item` - an item the guest needs to pay for
+
+            * `discount` - a discount the guest has received
+
+            * `card-payment` - a credit card payment
+
+            * `card-refund` - a credit card refund
+
+            * `non-cc-payment` - a non credit card payment (cash, wire transfer,
+            etc)
+
+            * `non-cc-refund` - a non credit card refund
+
+            * `person-credit` - personal credit was added for the guest
+
+            * `person-debit` - personal credit was used for payment
+          schema:
+            type: array
+            items:
+              type: string
+        - name: program_id
+          in: query
+          description: |
+            Filter transactions for a specific program or programs (for multiple
+            programs supply a comma separated list of ids).
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: registration_id
+          in: query
+          description: |
+            Filter transactions for a specific registration or registrations.
+          schema:
+            type: array
+            items:
+              type: integer
+        - name: min_date
+          in: query
+          description: |
+            Filter transactions that were submitted on or after this date.
+          schema:
+            type: string
+            format: date
+        - name: max_date
+          in: query
+          description: |
+            Filter transactions that were submitted on or before this date.
+          schema:
+            type: string
+            format: date
+        - name: category
+          in: query
+          description: |
+            Filter transactions by category. Categories are user defined and can
+            be very specific.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: An array of transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '400':
+          description: An error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /payments:
+    get:
+      summary: Get payment transaction info
+      description: |
+        Payment transactions can be credit card transactions entered
+        automatically through the Booking Guru
+
+        registration system and entires done manually through the admin
+        interface. Refunds are also represented
+
+        here Every payment is also available through the `/transactions`
+        endpoint, but objects received through
+
+        this endpoint are filtered for easier use and contain more details that
+        are only relevant for payments.
+
+
+        The `/payments` endpoint accepts the same arguments as the
+        `/transactions` endpoint.
+      parameters:
+        - $ref: '#/components/parameters/token'
+      responses:
+        '200':
+          description: An array of payments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+        '400':
+          description: An error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /items:
+    get:
+      summary: Get item transaction info
+      description: |
+        Item transactions represent anything purchased by a guest and any
+        discount they received. This
+
+        includes payment for programs, lodging, meals and any optional items
+        that were set up. Every item
+
+        transaction is also available through the `/transactions` endpoint, but
+        objects received here
+
+        are filtered for easier use and contain more details that are only
+        relevant for items.
+
+
+        The `/items` endpoint accepts the same arguments as the `/transactions`
+        endpoint.
+      parameters:
+        - $ref: '#/components/parameters/token'
+      responses:
+        '200':
+          description: An array of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+        '400':
+          description: An error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /leads:
+    get:
+      summary: Get leads info
+      description: |
+        Leads are created in two cases: (1) when a person enters a waiting list
+        on a program that's fully booked and,
+
+        (2) when the Advanced Registration Form is enabled and the user only
+        enters their name and email in the Welcome
+
+        section. In the former case the lead type is 'abandoned-reg', in the
+        latter it is 'wait-list'.
+      parameters:
+        - $ref: '#/components/parameters/token'
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/lang'
+        - name: program_id
+          in: query
+          description: |
+            Filter leads for a specific program or programs (for multiple
+            programs supply a comma separated list of ids).
+          schema:
+            type: integer
+        - name: lead_type
+          in: query
+          description: |
+            Filter transactions for a lead type.
+          schema:
+            type: string
+            enum:
+              - abandoned-reg
+              - wait-list
+      responses:
+        '200':
+          description: An array of leads
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lead'
+        '400':
+          description: An error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  parameters:
+    token:
+      name: token
+      in: query
+      description: Security token
+      required: true
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      description: |
+        Get further pages of results. By default the first `limit` results is
+        returned, to get further results
+
+        pass higher values to `page`. When a page is higher than available data
+        the request will return an empty JSON array.
+      schema:
+        type: integer
+    id:
+      name: id
+      in: query
+      description: |
+        Get programs with a specific id or list of ids. To get multiple objects,
+        provide a comma separated list of values.
+      schema:
+        type: array
+        items:
+          type: integer
+    limit:
+      name: limit
+      in: query
+      description: |
+        Limit number of return values. The default limit is 20. Pass `limit=0`
+        To get all the objects without
+
+        limits, but please use this with caution to not overload our servers.
+      schema:
+        type: integer
+    lang:
+      name: lang
+      in: query
+      description: |
+        Get the content for a particular language. The language values are
+        two-letter identifiers from
+
+        [ISO 639-1](https://www.loc.gov/standards/iso639-2/php/code_list.php).
+
+        Only the languages that are enabled for your install will work. The
+        default language is `en` (English).
+      schema:
+        type: string
+  schemas:
+    Program:
+      type: object
+      description: A single program
+      properties:
+        id:
+          type: integer
+          description: internal unique id
+        self_url:
+          type: string
+          format: url
+          description: API URL pointing back to the object
+        name:
+          type: string
+          description: program name
+        content:
+          type: string
+          description: program description
+        start_date:
+          type: string
+          format: date
+          description: program start date
+        end_date:
+          type: string
+          format: date
+          description: program end date
+        public:
+          type: boolean
+          description: |-
+            is the programs listed publicly (controlled by the "Remove from
+            public listings" setting for a program)
+        registrations_url:
+          type: string
+          format: url
+          description: API URL for program registrations
+        transactions_url:
+          type: string
+          format: url
+          description: API URL for all program transactions (includs payments and items)
+        payments_url:
+          type: string
+          format: url
+          description: API URL for program payments
+        items_url:
+          type: string
+          format: url
+          description: API URL for program items
+        teachers:
+          type: array
+          items:
+            type: string
+          description: teacher names for the program
+        categories:
+          type: array
+          items:
+            type: string
+          description: categories the program belongs to
+        external_code:
+          type: string
+          description: |-
+            custom program code for linking with other software (entered
+            manually in admin interface)
+        registrations_link:
+          type: string
+          format: url
+          description: URL of public registration page for program
+        program_link:
+          type: string
+          format: url
+          description: URL of public program info page
+        images:
+          type: array
+          items:
+            type: array
+            items: {}
+          description: info about program images including urls and sizes
+    Teacher:
+      type: object
+      description: A single teacher
+      properties:
+        id:
+          type: integer
+          description: internal unique id
+        self_url:
+          type: string
+          format: url
+          description: API URL pointing back to the object
+        name:
+          type: string
+          description: teacher name
+        content:
+          type: string
+          description: teacher description
+        programs_url:
+          type: string
+          format: url
+          description: API URL for the teacher's programs
+        images:
+          type: array
+          items:
+            type: array
+            items: {}
+          description: info about teacher images including urls and sizes
+    Registration:
+      type: object
+      description: A single registration by a guest to a program.
+      properties:
+        id:
+          type: integer
+          description: internal unique id
+        self_url:
+          type: string
+          description: API URL pointing back to the object
+          format: url
+        submitted:
+          type: string
+          description: time the registration was submitted
+          format: date-time
+        start_date:
+          type: string
+          description: the day the guest's stay starts
+          format: date
+        end_date:
+          type: string
+          description: the day the guest's stay ends
+          format: date
+        status:
+          type: string
+          enum:
+            - reserved
+            - pending
+            - need-approval
+            - unconfirmed
+            - cancelled
+            - arrived
+            - checked-out
+            - duplicate
+          description: registration status
+        first_name:
+          type: string
+          description: guest's first name
+        last_name:
+          type: string
+          description: guest's last name
+        full_name:
+          type: string
+          description: guest's full name
+        email:
+          type: string
+          format: email
+          description: guest's email address
+        program:
+          type: string
+          description: name of program the registration is for
+        program_url:
+          type: string
+          format: url
+          description: URL for API representation of program
+        program_categories:
+          type: array
+          items:
+            type: string
+          description: categories for the program
+        transactions_url:
+          type: string
+          format: url
+          description: API URL for all registration's transactions
+        payments_url:
+          type: string
+          format: url
+          description: API URL for registration's item transactions
+        items_url:
+          type: string
+          format: url
+          description: API URL for registration's payment transactions
+        optional_items:
+          type: array
+          items:
+            type: string
+          description: optional items (add-ons) selected for the registration
+        room:
+          type: string
+          description: name of room guest will be staying in
+        lodging:
+          type: string
+          description: name of lodging type selected
+        nights:
+          type: integer
+          description: total nights of stay
+        grand_total:
+          type: number
+          description: total amount owed for the registration
+        balance_due:
+          type: number
+          description: current balance
+        guest_statement_link:
+          type: string
+          format: url
+          description: link to the (user-facing) guest statement
+        guest_edit_link:
+          type: string
+          format: url
+          description: link to guest edit page (where a guest can update their details)
+        questions:
+          type: array
+          description: |-
+            an array of all the custom fields that have been configured for the
+            program for which this registration was entered
+          items: {}
+    Transaction:
+      type: object
+      description: A single transaction
+      properties:
+        id:
+          type: integer
+          description: internal unique id
+        self_url:
+          type: string
+          format: url
+          description: API URL pointing back to the object
+        submitted:
+          type: string
+          format: date-time
+          description: exact time when transaction was submitted
+        trans_date:
+          type: string
+          format: date-time
+          description: |-
+            exact time of the transaction (can be modified manually, as opposed
+            to `submitted`)
+        class:
+          type: string
+          description: coarce grained classification of transactions
+        category:
+          type: string
+          description: fine grained (and user defined) classification of transactions
+        status:
+          type: string
+          enum:
+            - complete
+            - cancel
+          description: transaction status
+        description:
+          type: string
+          description: |-
+            transaction description (auto-generated or user-entered in the admin
+            interface)
+        notes:
+          type: string
+          description: notes entered about the transaction by the admin
+        staff_name:
+          type: string
+          description: |-
+            username of staff member who entered the transaction (if manually
+            entered in the admin interface)
+        program_name:
+          type: string
+          description: name of program for which this transaction was made
+        program_url:
+          type: string
+          format: url
+          description: API URL of program for which this transaction was made
+        person_name:
+          type: string
+          description: name of person on the registration
+        registration_url:
+          type: string
+          format: url
+          description: API URL of connected registration object
+        details_url:
+          type: string
+          format: url
+          description: API URL of detailed payment or item object
+        charge_amount:
+          type: number
+          description: amount that was charged (usually used for purchased items)
+        credit_amount:
+          type: number
+          description: amount that was credited (usually used for payments made)
+    Payment:
+      type: object
+      description: |
+        A single payment or refund transaction. The object includes all fields
+        in Transaction and additional
+
+        fields that are only relevant for payments made by the guest.
+      properties:
+        fund_method:
+          type: string
+          description: type of funding
+        merchant_name:
+          type: string
+          description: name of credit card processor (e.g. Paypal)
+        merchant_trans_id:
+          type: string
+          description: transaction id as recorded by credit card processor
+        merchant_profile:
+          type: string
+          description: profile id as recorded by credit card processor
+        merchant_account:
+          type: string
+          description: name of account the transaction was made on
+        merchant_cc_details:
+          type: string
+          description: credit card details as recorded by credit card processor
+    Item:
+      type: object
+      description: |
+        A single item or discount transaction. The object includes all fields in
+        Transaction and additional
+
+        fields that are only relevant for items purchased by the guest.
+      properties:
+        is_addon:
+          type: boolean
+          description: is this item an addon (an optional item) selected by the guest
+        discount_amount:
+          type: string
+          description: |-
+            discount amount (either entered directly or calculated from
+            `discount_percent`)
+        discount_percent:
+          type: string
+          description: discount percentage
+        subtotal:
+          type: string
+          description: 'total after applying discount, before applying taxes'
+        tax_1_info:
+          type: string
+          description: first tax description
+        tax_1_amount:
+          type: string
+          description: first tax amount
+        tax_2_info:
+          type: string
+          description: second tax description
+        tax_2_amount:
+          type: string
+          description: second tax amount
+        grand_total:
+          type: string
+          description: total after applying discount and taxes
+    Lead:
+      type: object
+      description: |
+        A single lead, either an abandoned registration or a waiting list entry.
+      properties:
+        submitted:
+          type: string
+          format: date-time
+          description: exact time when lead was submitted
+        lead_type:
+          type: string
+          enum:
+            - abandoned-reg
+            - wait-list
+          description: type of lead
+        first_name:
+          type: string
+          description: guest's first name
+        last_name:
+          type: string
+          description: guest's last name
+        full_name:
+          type: string
+          description: guest's full name
+        email:
+          type: string
+          format: email
+          description: guest's email
+        program:
+          type: string
+          description: name of program for which the guest attempted to register
+        program_id:
+          type: integer
+          description: id for the program
+        program_url:
+          type: string
+          format: url
+          description: API URL for the program
+        program_categories:
+          type: array
+          description: categories for the program
+          items: {}
+        program_external_code:
+          type: string
+          description: |-
+            external code for the program (can be set up in the admin under
+            Program / Advanced)
+        language:
+          type: string
+          description: |-
+            language code in which the registration was completed (i.e. en, fr,
+            etc.)
+        program_link:
+          type: string
+          format: url
+          description: link to program description page
+        registration_link:
+          type: string
+          format: url
+          description: link to registration page
+        questions:
+          type: array
+          description: an array of answers to all custom questions
+          items: {}
+    Error:
+      type: object
+      description: An error returned in case of an incorrect request.
+      properties:
+        message:
+          type: string
+          description: description of error and steps to correct it
