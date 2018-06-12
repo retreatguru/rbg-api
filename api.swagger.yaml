@@ -66,6 +66,7 @@ info:
 
 # -------------------------------------------------------------------------------------------------
 
+host: secure.retreat.guru
 basePath: /api/v1
 schemes: [https]
 produces: [application/json]
