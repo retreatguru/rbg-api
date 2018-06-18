@@ -1,5 +1,15 @@
-Booking Guru API v1
-===================
+Booking Guru API docs have moved
+==========================
+
+We now have a way better documentation on the main Booking Guru site at `https://{{yourdomain}}.secure.retreat.guru/api`.
+
+The easiest way to access the docs is through your install's *Reg. Settings* under *API*.
+The updated docs have examples in multiple languages and a lot more details.
+
+The following remains here for posterity only and will eventually be retired.
+
+Booking Guru API v1.0
+=====================
 
 Welcome to the Booking Guru API, we're glad you could make it. Let's poke around a bit.
 
