@@ -1,7 +1,7 @@
-Booking Guru API docs have moved
+IMPORTANT: Booking Guru API docs have moved
 ==========================
 
-We now have a way better documentation on the main Booking Guru site at https://secure.retreat.guru/api.
+*We now have a better documentation at https://secure.retreat.guru/api.*
 
 The updated docs have examples in multiple languages and a lot more details.
 
